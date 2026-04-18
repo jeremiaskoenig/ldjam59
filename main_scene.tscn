@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://b87co3fql7oei"]
+
+[ext_resource type="Script" uid="uid://dnjibfjbd0qns" path="res://GenerateHexes.cs" id="1_2c62f"]
+[ext_resource type="PackedScene" uid="uid://6ualdu5e6i8n" path="res://prefabs/hex.tscn" id="2_gyfs4"]
+
+[node name="Node3D" type="Node3D" unique_id=718273323]
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=198037098]
+transform = Transform3D(-0.62731194, 0.3733615, -0.68343323, 0, 0.87758243, 0.4794258, 0.7787681, 0.3007495, -0.5505179, -1.7936372, 3.341231, -1.2724153)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Camera3D" unique_id=1992613819]
+
+[node name="HexGenerator" type="Node3D" parent="." unique_id=1361922431]
+script = ExtResource("1_2c62f")
+Hex = ExtResource("2_gyfs4")
+GenerateFromX = -5
+GenerateFromY = -5
+GenerateToX = 5
+GenerateToY = 5
+
+[node name="InitialScene" type="Node3D" parent="." unique_id=447640780]

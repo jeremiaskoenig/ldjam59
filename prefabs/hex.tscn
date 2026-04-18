@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://6ualdu5e6i8n"]
+
+[ext_resource type="Texture2D" uid="uid://dqmow2hpln3ky" path="res://textures/green.png" id="1_ykapj"]
+[ext_resource type="ArrayMesh" uid="uid://djwlhgcdxdmtm" path="res://meshes/hex.obj" id="2_2eh4c"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3yls8"]
+albedo_texture = ExtResource("1_ykapj")
+
+[node name="Hex" type="MeshInstance3D" unique_id=1141399512]
+material_override = SubResource("StandardMaterial3D_3yls8")
+mesh = ExtResource("2_2eh4c")
