@@ -10,8 +10,8 @@ public partial class MainScene : Node3D
 	{
 		CurrentLevel = 0;
 
-		var hexGenerator = GetNode<GenerateHexes>("HexGenerator");
-		hexGenerator.generateNextLevel();		
+		//var hexGenerator = GetNode<GenerateHexes>("HexGenerator");
+		//hexGenerator.generateNextLevel();		
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

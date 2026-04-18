@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="LudumDare59"
-run/main_scene="uid://b87co3fql7oei"
+run/main_scene="uid://x7dlpkxku8e"
 config/features=PackedStringArray("4.6", "C#", "Mobile")
 config/icon="res://icon.svg"
 
