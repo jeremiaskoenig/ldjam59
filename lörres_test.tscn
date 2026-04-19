@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://c88cpfbkmjevb"]
+
+[ext_resource type="Script" uid="uid://bembdgupkyd2j" path="res://MainScene.cs" id="1_a2aaw"]
+[ext_resource type="Script" uid="uid://ctn4mn061ij00" path="res://scripts/LevelGenerator.cs" id="2_6njfa"]
+[ext_resource type="PackedScene" uid="uid://6ualdu5e6i8n" path="res://prefabs/hex.tscn" id="2_a2aaw"]
+[ext_resource type="Script" uid="uid://go88h6o5g5a4" path="res://scripts/GridManager.cs" id="3_selsl"]
+[ext_resource type="Script" uid="uid://b232x6fi5gay1" path="res://scripts/CameraInteraction.cs" id="4_s767a"]
+
+[node name="Node3D" type="Node3D" unique_id=1314113066]
+script = ExtResource("1_a2aaw")
+
+[node name="HexGen" type="Node3D" parent="." unique_id=422008054 node_paths=PackedStringArray("GridManagerNode")]
+script = ExtResource("2_6njfa")
+Hex = ExtResource("2_a2aaw")
+GridManagerNode = NodePath("../GridManager")
+HeightOffsetFactor = 0.03
+
+[node name="GridManager" type="Node" parent="." unique_id=1484143566 node_paths=PackedStringArray("DebugInfo", "DebugButton")]
+script = ExtResource("3_selsl")
+DebugInfo = NodePath("../CanvasLayer/DebugLabel")
+DebugButton = NodePath("../CanvasLayer/DebugButton")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=99254595 node_paths=PackedStringArray("GridManagerNode")]
+transform = Transform3D(0.99999666, -0.0022620088, 0.0012433224, 0, 0.48168606, 0.87634385, -0.0025811885, -0.876341, 0.48168442, 0.4753942, 7.340228, 5.076562)
+script = ExtResource("4_s767a")
+GridManagerNode = NodePath("../GridManager")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Camera3D" unique_id=1135552979]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=993000032]
+
+[node name="DebugLabel" type="Label" parent="CanvasLayer" unique_id=795775713]
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DebugButton" type="Button" parent="CanvasLayer" unique_id=1015350246]
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Check"
