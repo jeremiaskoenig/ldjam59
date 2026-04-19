@@ -17,15 +17,8 @@ public partial class GridManager : Node
     {
         DebugButton.Pressed += () =>
         {
-            var start = hexStore.Values.First(p => p.State.StateType == Hex.HexStateType.Start);
-            var end = hexStore.Values.First(p => p.State.StateType == Hex.HexStateType.End);
-
-            var result = CheckConnection(tt(start.Coordinates), tt(end.Coordinates));
-
-            DebugInfo.Text = $"Success: {result.Success}";
+            Debug();
         };
-
-        (int x, int y) tt(Vector2I v) => (v.X, v.Y);
     }
 
 
@@ -69,6 +62,11 @@ public partial class GridManager : Node
         var neighbours = GetNeighbours(x, y);
         foreach (var neighbour in neighbours)
         {
+            if (neighbour == null)
+            {
+                continue;
+            }
+
             var dX = neighbour.Coordinates.X - x;
             var dY = neighbour.Coordinates.Y - y;
 
@@ -137,6 +135,22 @@ public partial class GridManager : Node
         }
 
         return (false, []);
+    }
+
+    public void Debug()
+    {
+        var start = hexStore.Values.First(p => p.State.StateType == Hex.HexStateType.Start);
+        var end = hexStore.Values.First(p => p.State.StateType == Hex.HexStateType.End);
+        var result = CheckConnection(tt(start.Coordinates), tt(end.Coordinates));
+
+        DebugInfo.Text = $"Success: {result.Success}";
+
+        foreach (var hex in result.Path)
+        {
+            hex.SetWireColor(Colors.Cyan);
+        }
+
+        (int x, int y) tt(Vector2I v) => (v.X, v.Y);   
     }
 
     public void Debug(Hex hex)

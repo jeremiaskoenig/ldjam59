@@ -80,13 +80,13 @@ public partial class CameraInteraction : Camera3D
                 }
                 else if (mouseEvent.ButtonIndex == MouseButton.Right && hex != null)
                 {
-                    if (currentSwapHex != null)
-                    {
-                        currentSwapHex.IsSwapMode = false;
-                        currentSwapHex = null;
-                    }
+                    //if (currentSwapHex != null)
+                    //{
+                    //    currentSwapHex.IsSwapMode = false;
+                    //    currentSwapHex = null;
+                    //}
 
-                    hex.UpdateState(hex.State.Rotated(1));
+                    //hex.UpdateState(hex.State.Rotated(1));
                     //if (currentRotateHex == null)
                     //{
                     //    currentRotateHex = hex;
@@ -142,7 +142,9 @@ public partial class CameraInteraction : Camera3D
 
     public override void _PhysicsProcess(double delta)
     {
-        GetHexOnCursor()?.Hover();
+        var hex = GetHexOnCursor();
+        hex?.Hover();
+        currentRotateHex = hex;
     }
 
 }

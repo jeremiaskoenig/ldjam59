@@ -53,13 +53,13 @@ public partial class GenerateHexes : Node3D
         var startY = GD.RandRange(GenerateFromY + 1, GenerateToY - 1);
 
         var startHex = GridManager.GetAt(startX, startY);
-        startHex.UpdateState(new(0, 0, global::Hex.HexStateType.Start));
+        startHex.UpdateState(global::Hex.HexState.FromState(global::Hex.HexStateType.Start));
 
         var endX = GD.RandRange(GenerateFromX + 1, GenerateToX - 1);
         var endY = GD.RandRange(GenerateFromY + 1, GenerateToY - 1);
 
         var endHex = GridManager.GetAt(endX, endY);
-        endHex.UpdateState(new(0, 0, global::Hex.HexStateType.End));
+        endHex.UpdateState(global::Hex.HexState.FromState(global::Hex.HexStateType.End));
     }
 
 

@@ -40,6 +40,7 @@ public partial class Hex : MeshInstance3D
 
     public record HexState(int ConnectionType, int Rotation, HexStateType StateType)
     {
+        public static HexState FromState(HexStateType type) => new(0, 0, type);
         public static HexState Random() => new HexState(GD.RandRange(0, 2), GD.RandRange(0, 5), HexStateType.Connection);
         public HexState Rotated(int direction) => new (ConnectionType, (Rotation + 6 + direction) % 6, StateType);
 
@@ -144,6 +145,24 @@ public partial class Hex : MeshInstance3D
         UpdateState(HexState.Random());
     }
 
+    public void SetWireColor (Color color)
+    {
+        ApplyForWireMeshes(mesh =>
+        {
+            (mesh.MaterialOverride as StandardMaterial3D).AlbedoColor = color;
+        });
+    }
+
+    private void ApplyForWireMeshes(Action<MeshInstance3D> apply)
+    {
+        foreach (var connector in Connectors)
+        {
+            apply(connector.GetChild<MeshInstance3D>(0));
+        }
+        apply(StartMarker as MeshInstance3D);
+        apply(EndMarker as MeshInstance3D);
+    }
+
     public Color OutlineColor
     {
         get
@@ -180,12 +199,7 @@ public partial class Hex : MeshInstance3D
         this.lockedPosition = this.Position;
         MakeMaterialUnique(this);
         MakeMaterialUnique(Outline);
-        foreach (var connector in Connectors)
-        {
-            MakeMaterialUnique(connector.GetChild<MeshInstance3D>(0));
-        }
-        MakeMaterialUnique(StartMarker as MeshInstance3D);
-        MakeMaterialUnique(EndMarker as MeshInstance3D);
+        ApplyForWireMeshes(MakeMaterialUnique);
 
         switch (StartType)
         {
