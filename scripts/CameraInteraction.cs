@@ -3,7 +3,9 @@ using Godot;
 
 public partial class CameraInteraction : Camera3D
 {
+    [Export] public Godot.Collections.Dictionary<string, AudioStream> SoundEffects { get; set; }
 
+    [Export] public AudioStreamPlayer AudioStreamPlayer { get; set; }
     [Export] public Node GridManagerNode { get; set; }
     private GridManager GridManager => (GridManager)GridManagerNode;
 
@@ -39,101 +41,93 @@ public partial class CameraInteraction : Camera3D
     private Hex currentSwapHex = null;
     private Hex currentRotateHex = null;
 
+    private void PlaySound(string key)
+    {
+        AudioStreamPlayer.Stream = SoundEffects[key];
+        AudioStreamPlayer.Play();
+    }
+    private const string SOUND_SWAP = "swap";
+    private const string SOUND_CLICK = "click";
+    private const string SOUND_BUMP = "bump";
+
     public override void _Input(InputEvent @event)
     {
         if (@event is InputEventMouseButton mouseEvent)
         {
             var hex = GetHexOnCursor();
-            if (hex?.State.StateType != Hex.HexStateType.Connection)
+            if (hex?.State.CanInteract() ?? false)
             {
-                //return;
-            }
-            if (mouseEvent.IsReleased())
-            {
-                if (mouseEvent.ButtonIndex == MouseButton.Left && hex != null)
+                if (mouseEvent.IsReleased())
                 {
-                    if (currentRotateHex != null)
+                    if (mouseEvent.ButtonIndex == MouseButton.Left)
                     {
-                        currentRotateHex.IsRotationMode = false;
-                        currentRotateHex = null;
-                    }
+                        if (currentRotateHex != null)
+                        {
+                            currentRotateHex.IsRotationMode = false;
+                            currentRotateHex = null;
+                        }
 
-                    if (currentSwapHex == null)
+                        if (currentSwapHex == null)
+                        {
+                            PlaySound(SOUND_CLICK);
+                            currentSwapHex = hex;
+                            currentSwapHex.IsSwapMode = true;
+                        }
+                        else
+                        {
+                            PlaySound(SOUND_SWAP);
+
+                            var stateCurrentHex = currentSwapHex.State;
+                            var targetHex = hex.State;
+
+                            currentSwapHex.UpdateState(targetHex);
+                            hex.UpdateState(stateCurrentHex);
+
+                            currentSwapHex.AnimateSwap();
+                            hex.AnimateSwap();
+
+                            currentSwapHex.IsSwapMode = false;
+                            currentSwapHex = null;
+                        }
+                    }
+                    else if (mouseEvent.ButtonIndex == MouseButton.Middle)
                     {
-                        currentSwapHex = hex;
-                        currentSwapHex.IsSwapMode = true;
+                        PlaySound(SOUND_CLICK);
+                        GridManager.Debug(hex);
                     }
-                    else
+                }
+                else if (mouseEvent.IsPressed())
+                {
+                    if (mouseEvent.ButtonIndex == MouseButton.WheelUp)
                     {
-                        var stateCurrentHex = currentSwapHex.State;
-                        var targetHex = hex.State;
-
-                        currentSwapHex.UpdateState(targetHex);
-                        hex.UpdateState(stateCurrentHex);
-
-                        currentSwapHex.AnimateSwap();
-                        hex.AnimateSwap();
-
-                        currentSwapHex.IsSwapMode = false;
-                        currentSwapHex = null;
+                        PlaySound(SOUND_BUMP);
+                        hex.UpdateState(hex.State.Rotated(-1));
                     }
-                }
-                else if (mouseEvent.ButtonIndex == MouseButton.Right && hex != null)
-                {
-                    //if (currentSwapHex != null)
-                    //{
-                    //    currentSwapHex.IsSwapMode = false;
-                    //    currentSwapHex = null;
-                    //}
-
-                    //hex.UpdateState(hex.State.Rotated(1));
-                    //if (currentRotateHex == null)
-                    //{
-                    //    currentRotateHex = hex;
-                    //    currentRotateHex.IsRotationMode = true;
-                    //}
-                    //else
-                    //{
-                    //    currentRotateHex.IsRotationMode = false;
-                    //
-                    //    if (currentRotateHex == hex)
-                    //    {
-                    //        currentRotateHex = null;
-                    //    }
-                    //    else
-                    //    {
-                    //        currentRotateHex = hex;
-                    //        currentRotateHex.IsRotationMode = true;
-                    //    }
-                    //}
-                }
-                else if (mouseEvent.ButtonIndex == MouseButton.Middle && hex != null)
-                {
-                    GridManager.Debug(hex);
-                }
-            }
-            else if (mouseEvent.IsPressed() && currentRotateHex != null)
-            {
-                if (mouseEvent.ButtonIndex == MouseButton.WheelUp)
-                {
-                    currentRotateHex.UpdateState(currentRotateHex.State.Rotated(-1));
-                }
-                else if (mouseEvent.ButtonIndex == MouseButton.WheelDown)
-                {
-                    currentRotateHex.UpdateState(currentRotateHex.State.Rotated(1));
+                    else if (mouseEvent.ButtonIndex == MouseButton.WheelDown)
+                    {
+                        PlaySound(SOUND_BUMP);
+                        hex.UpdateState(hex.State.Rotated(1));
+                    }
                 }
             }
         }
         else if (@event is InputEventKey keyEvent)
         {
+            if (keyEvent.Keycode == Key.Alt)
+            {
+                DebugShowLabels =  keyEvent.IsPressed();
+            }
+
             if (keyEvent.IsReleased() && currentRotateHex != null)
             {
                 if (keyEvent.Keycode == Key.Q)
                 {
+                    PlaySound(SOUND_BUMP);
                     currentRotateHex.UpdateState(currentRotateHex.State.Rotated(1));
                 }
                 else if (keyEvent.Keycode == Key.E)
                 {
+                    PlaySound(SOUND_BUMP);
                     currentRotateHex.UpdateState(currentRotateHex.State.Rotated(-1));
                 }
             }
@@ -143,8 +137,12 @@ public partial class CameraInteraction : Camera3D
     public override void _PhysicsProcess(double delta)
     {
         var hex = GetHexOnCursor();
-        hex?.Hover();
+        if (hex != null && hex.State.CanInteract())
+        {
+            hex.Hover();
+        }
         currentRotateHex = hex;
     }
 
+    public static bool DebugShowLabels { get; private set; }
 }

@@ -50,13 +50,13 @@ public partial class GenerateHexes : Node3D
         GenerateHexGrid();
 
         var startX = GD.RandRange(GenerateFromX + 1, GenerateToX - 1);
-        var startY = GD.RandRange(GenerateFromY + 1, GenerateToY - 1);
+        var startY = GD.RandRange(GenerateFromY + 1, GenerateFromY + 5);
 
         var startHex = GridManager.GetAt(startX, startY);
         startHex.UpdateState(global::Hex.HexState.FromState(global::Hex.HexStateType.Start));
 
         var endX = GD.RandRange(GenerateFromX + 1, GenerateToX - 1);
-        var endY = GD.RandRange(GenerateFromY + 1, GenerateToY - 1);
+        var endY = GD.RandRange(GenerateToY - 5, GenerateToY - 1);
 
         var endHex = GridManager.GetAt(endX, endY);
         endHex.UpdateState(global::Hex.HexState.FromState(global::Hex.HexStateType.End));
@@ -77,7 +77,7 @@ public partial class GenerateHexes : Node3D
 
     private void PlaceHexAt(int x, int y)
     {
-        var hex = Hex.Instantiate<Node3D>() as Hex;
+        var hex = Hex.Instantiate<Node3D>();
         hex.Name = $"Hex_{x}_{y}";
         this.AddChild(hex);
 
@@ -93,7 +93,17 @@ public partial class GenerateHexes : Node3D
         hex.GlobalPosition = new(xPos, yPos, zPos);
         hex.Owner = GetTree().EditedSceneRoot;
 
-        hex.SetBasePosition(hex.GlobalPosition);
-        GridManager.RegisterHex(x, y, hex);
+        if (hex is Hex hexData)
+        {
+            hexData.SetBasePosition(hex.GlobalPosition);
+            GridManager.RegisterHex(x, y, hexData);
+
+            var randomOffset = GD.RandRange(5, 15);
+
+            var spawnZ = 15f + randomOffset;
+            var spawnY = -(spawnZ / 2.5f);
+
+            hex.GlobalPosition += new Vector3(0, spawnY, spawnZ);
+        }
     }
 }

@@ -8,10 +8,16 @@ public partial class Hex : MeshInstance3D
 
     private Vector3 lockedPosition;
 
-    private int hoverState => IsSelected ? 2 : (IsHovered ? 1 : 0);
+    private int positionState => IsDropped ? 3 : selectionState;
+    private int selectionState => IsSelected ? 2 : hoverState;
+    private int hoverState => IsHovered ? 1 : 0;
+    
     public int HoverFrames { get; set; } = 0;
     public bool IsHovered => HoverFrames > 0;
     public bool IsSelected => IsRotationMode || IsSwapMode;
+
+    public bool IsDropped { get; set; }
+    public int DropDelay { get; set; } = 0;
 
     public bool IsRotationMode { get; set; }
     public bool IsSwapMode { get; set; }
@@ -41,7 +47,7 @@ public partial class Hex : MeshInstance3D
     public record HexState(int ConnectionType, int Rotation, HexStateType StateType)
     {
         public static HexState FromState(HexStateType type) => new(0, 0, type);
-        public static HexState Random() => new HexState(GD.RandRange(0, 2), GD.RandRange(0, 5), HexStateType.Connection);
+        public static HexState Random(bool allowEmpty = false) => new HexState(GD.RandRange(allowEmpty ? 0 : 1, 3), GD.RandRange(0, 5), HexStateType.Connection);
         public HexState Rotated(int direction) => new (ConnectionType, (Rotation + 6 + direction) % 6, StateType);
 
         private static readonly Color wireColor = new(255, 204, 0);
@@ -55,6 +61,7 @@ public partial class Hex : MeshInstance3D
                 HexStateType.Connection => wireColor,
                 HexStateType.Start => startColor,
                 HexStateType.End => endColor,
+                _ => Colors.Magenta,
             };
 
             foreach (var connector in connectors)
@@ -87,20 +94,9 @@ public partial class Hex : MeshInstance3D
 
             if (StateType == HexStateType.Connection)
             {
-                switch (ConnectionType)
+                foreach (var index in GetConnectionIndices)
                 {
-                    case 0:
-                        connectors[Rotate(0)].Visible = true;
-                        connectors[Rotate(1)].Visible = true;
-                        break;
-                    case 1:
-                        connectors[Rotate(0)].Visible = true;
-                        connectors[Rotate(2)].Visible = true;
-                        break;
-                    case 2:
-                        connectors[Rotate(0)].Visible = true;
-                        connectors[Rotate(3)].Visible = true;
-                        break;
+                    connectors[index].Visible = true;
                 }
             }
             else if (StateType == HexStateType.Start)
@@ -115,20 +111,29 @@ public partial class Hex : MeshInstance3D
 
         private int Rotate(int index) => (index + Rotation) % 6;
 
+        private int[] GetConnectionIndices => ConnectionType switch
+        {
+            //1 => [Rotate(0), Rotate(1)],
+            1 => [Rotate(0), Rotate(3)], // replace with straight line
+            2 => [Rotate(0), Rotate(2)],
+            3 => [Rotate(0), Rotate(3)],
+            _ => [],
+        };
+
         public bool IsValidSide(int direction)
         {
             if (StateType != HexStateType.Connection)
             {
                 return true;
             }
+            return GetConnectionIndices.Contains(direction);
+        }
 
-            return ConnectionType switch
-            {
-                0 => (new int[] { Rotate(0), Rotate(1) }).Contains(direction),
-                1 => (new int[] { Rotate(0), Rotate(2) }).Contains(direction),
-                2 => (new int[] { Rotate(0), Rotate(3) }).Contains(direction),
-                _ => false,
-            };
+        public bool IsLocked { get; set; }
+
+        public bool CanInteract()
+        {
+            return !IsLocked && StateType == HexStateType.Connection;
         }
     }
 
@@ -167,20 +172,13 @@ public partial class Hex : MeshInstance3D
     {
         get
         {
-            var material = Outline.MaterialOverride as ShaderMaterial;
-            if (material != null)
-            {
-                return (Color)material.GetShaderParameter("outline_color");
-            }
-            return new Color(0, 0, 0, 0);
+            var material = Outline.MaterialOverride as StandardMaterial3D;
+            return material.AlbedoColor;
         }
         set
         {
-            var material = Outline.MaterialOverride as ShaderMaterial;
-            if (material != null)
-            {
-                material.SetShaderParameter("outline_color", value);
-            }
+            var material = Outline.MaterialOverride as StandardMaterial3D;
+            material.AlbedoColor = value;
         }
     }
 
@@ -219,10 +217,13 @@ public partial class Hex : MeshInstance3D
     {
         HoverFrames = Mathf.Max(0, HoverFrames - 1);
         SwapAnimationFrames = Mathf.Max(0, SwapAnimationFrames - 1);
+        DropDelay--;
     }
 
     public override void _Process(double delta)
     {
+        NodeLabel.Visible = CameraInteraction.DebugShowLabels;
+
         if (SwapAnimationFrames > 0)
         {
             float factor;
@@ -241,9 +242,9 @@ public partial class Hex : MeshInstance3D
             Scale = Vector3.One;
         }
 
-        this.Outline.Visible = this.hoverState > 0;
+        this.Outline.Visible = this.positionState > 0;
         
-        switch (this.hoverState)
+        switch (this.positionState)
         {
             case 1:
                 this.Outline.Visible = true;
@@ -266,11 +267,12 @@ public partial class Hex : MeshInstance3D
         }
 
         var startPos = this.Position;
-        var targetPos = this.hoverState switch
+        var targetPos = this.positionState switch
         {
             0 => lockedPosition,
             1 => lockedPosition + new Vector3(0, 0.1f, 0),
             2 => lockedPosition + new Vector3(0, 0.25f, 0),
+            3 => DropDelay > 0 ? lockedPosition : lockedPosition + new Vector3(0, -20000f, 20000f),
             _ => this.Position
         };
 
@@ -278,7 +280,7 @@ public partial class Hex : MeshInstance3D
         if (Mathf.Abs(totalDistance) < 0.0001f)
             return;
 
-        const float speed = 2.0f;
+        var speed = this.positionState == 3 ? (5.0f + Math.Abs(DropDelay) * 1.03f) : (this.positionState == 0 ? 25f : 2f);// 2.0f;
         var t = speed * (float)delta / totalDistance;
         t = Mathf.Clamp(t, 0, 1);
 
@@ -297,4 +299,11 @@ public partial class Hex : MeshInstance3D
         SwapAnimationFrames = SwapAnimationDuration;
     }
 
+    public void Deactivate()
+    {
+        SetWireColor(Colors.DarkOliveGreen);
+        State.IsLocked = true;
+        IsDropped = true;
+        DropDelay = (30 - Math.Abs(Coordinates.X) + Coordinates.Y) * 3;
+    }
 }

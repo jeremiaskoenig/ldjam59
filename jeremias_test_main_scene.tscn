@@ -3,31 +3,24 @@
 [ext_resource type="Script" uid="uid://dnjibfjbd0qns" path="res://tools/GenerateHexes.cs" id="1_kcv1t"]
 [ext_resource type="Script" uid="uid://go88h6o5g5a4" path="res://scripts/GridManager.cs" id="2_3ooda"]
 [ext_resource type="PackedScene" uid="uid://6ualdu5e6i8n" path="res://prefabs/hex.tscn" id="2_8njnu"]
+[ext_resource type="Script" uid="uid://chugwva8uliru" path="res://scripts/RoundManager.cs" id="2_skmpo"]
+[ext_resource type="AudioStream" uid="uid://cx0pfu3ehqkc1" path="res://sounds/swap_tiles.wav" id="3_bei12"]
+[ext_resource type="AudioStream" uid="uid://c54y0jvodco44" path="res://sounds/click.wav" id="4_8njnu"]
+[ext_resource type="AudioStream" uid="uid://yrdtfn1n1jdd" path="res://sounds/bump.wav" id="5_ahhli"]
 [ext_resource type="Script" uid="uid://b232x6fi5gay1" path="res://scripts/CameraInteraction.cs" id="7_ahhli"]
 
 [node name="Node3D" type="Node3D" unique_id=1314113066]
-
-[node name="HexGen" type="Node3D" parent="." unique_id=422008054 node_paths=PackedStringArray("GridManagerNode")]
-script = ExtResource("1_kcv1t")
-Hex = ExtResource("2_8njnu")
-GenerateFromX = -12
-GenerateFromY = -8
-GenerateToX = 12
-GenerateToY = 8
-HeightOffsetFactor = 0.03
-GridManagerNode = NodePath("../GridManager")
 
 [node name="GridManager" type="Node" parent="." unique_id=1484143566 node_paths=PackedStringArray("DebugInfo", "DebugButton")]
 script = ExtResource("2_3ooda")
 DebugInfo = NodePath("../CanvasLayer/DebugLabel")
 DebugButton = NodePath("../CanvasLayer/DebugButton")
 
-[node name="Camera3D" type="Camera3D" parent="." unique_id=99254595 node_paths=PackedStringArray("GridManagerNode")]
-transform = Transform3D(0.99999666, -0.0022620088, 0.0012433224, 0, 0.48168606, 0.87634385, -0.0025811885, -0.876341, 0.48168442, 0.4753942, 7.340228, 5.076562)
-script = ExtResource("7_ahhli")
-GridManagerNode = NodePath("../GridManager")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Camera3D" unique_id=1135552979]
+[node name="RoundManager" type="Node" parent="." unique_id=1836318154 node_paths=PackedStringArray("GridManager", "RoundProgress")]
+script = ExtResource("2_skmpo")
+GridManager = NodePath("../GridManager")
+RoundProgress = NodePath("../CanvasLayer/ProgressBar")
+RoundDelay = 5
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=993000032]
 
@@ -43,3 +36,44 @@ grow_vertical = 2
 offset_right = 8.0
 offset_bottom = 8.0
 text = "Check"
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer" unique_id=354028720]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -54.0
+offset_top = 291.92303
+offset_right = 536.1333
+offset_bottom = 318.92303
+grow_horizontal = 0
+grow_vertical = 2
+rotation = -1.5707964
+max_value = 30.0
+show_percentage = false
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=99254595 node_paths=PackedStringArray("AudioStreamPlayer", "GridManagerNode")]
+transform = Transform3D(0.99999666, -0.0022620088, 0.0012433224, 0, 0.48168606, 0.87634385, -0.0025811885, -0.876341, 0.48168442, 0, 7.34, 12)
+script = ExtResource("7_ahhli")
+SoundEffects = Dictionary[String, AudioStream]({
+"bump": ExtResource("5_ahhli"),
+"click": ExtResource("4_8njnu"),
+"swap": ExtResource("3_bei12")
+})
+AudioStreamPlayer = NodePath("AudioStreamPlayer")
+GridManagerNode = NodePath("../GridManager")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Camera3D" unique_id=1135552979]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Camera3D" unique_id=1955750935]
+
+[node name="HexGen" type="Node3D" parent="." unique_id=422008054 node_paths=PackedStringArray("GridManagerNode")]
+script = ExtResource("1_kcv1t")
+Hex = ExtResource("2_8njnu")
+GenerateFromX = -10
+GenerateFromY = 0
+GenerateToX = 10
+GenerateToY = 16
+HeightOffsetFactor = 0.03
+GridManagerNode = NodePath("../GridManager")

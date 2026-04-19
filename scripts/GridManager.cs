@@ -1,10 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 
 public partial class GridManager : Node
 {
@@ -137,17 +134,35 @@ public partial class GridManager : Node
         return (false, []);
     }
 
+    public void DeactivateUnused(int y)
+    {
+        foreach (var hex in hexStore.Values.Where(h => h.Coordinates.Y <= y && h.State.CanInteract()))
+        {
+            hex.Deactivate();
+        }
+    }
+
+    private Hex debugStartHex = null;
+    private Hex debugEndHex = null;
+
     public void Debug()
     {
-        var start = hexStore.Values.First(p => p.State.StateType == Hex.HexStateType.Start);
-        var end = hexStore.Values.First(p => p.State.StateType == Hex.HexStateType.End);
-        var result = CheckConnection(tt(start.Coordinates), tt(end.Coordinates));
+        debugStartHex ??= hexStore.Values.First(p => p.State.StateType == Hex.HexStateType.Start);
+        debugEndHex ??= hexStore.Values.First(p => p.State.StateType == Hex.HexStateType.End);
+        
+        var result = CheckConnection(tt(debugStartHex.Coordinates), tt(debugEndHex.Coordinates));
 
         DebugInfo.Text = $"Success: {result.Success}";
 
-        foreach (var hex in result.Path)
+        if (result.Success)
         {
-            hex.SetWireColor(Colors.Cyan);
+            foreach (var hex in result.Path)
+            {
+                hex.SetWireColor(Colors.Cyan);
+                hex.State.IsLocked = true;
+            }
+            
+            DeactivateUnused(debugEndHex.Coordinates.Y);
         }
 
         (int x, int y) tt(Vector2I v) => (v.X, v.Y);   

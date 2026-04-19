@@ -1,29 +1,68 @@
-[gd_scene format=3 uid="uid://6ualdu5e6i8n"]
+[gd_scene format=4 uid="uid://6ualdu5e6i8n"]
 
-[ext_resource type="Texture2D" uid="uid://dqmow2hpln3ky" path="res://textures/green.png" id="1_aqd0d"]
+[ext_resource type="Texture2D" uid="uid://dqmow2hpln3ky" path="res://textures/green.png" id="1_ky36l"]
 [ext_resource type="ArrayMesh" uid="uid://djwlhgcdxdmtm" path="res://meshes/hex.obj" id="2_2eh4c"]
 [ext_resource type="Script" uid="uid://dack8jbfrp55w" path="res://scripts/Hex.cs" id="3_ky36l"]
-[ext_resource type="Shader" uid="uid://dsvoj5dw53v0l" path="res://shaders/outline.gdshader" id="4_aqd0d"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aqd0d"]
+albedo_texture = ExtResource("1_ky36l")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ybivv"]
-albedo_texture = ExtResource("1_aqd0d")
+shading_mode = 0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_aqd0d"]
-render_priority = 0
-shader = ExtResource("4_aqd0d")
-shader_parameter/outline_color = Color(0, 0, 0, 1)
-shader_parameter/outline_width = 1.0
+[sub_resource type="ArrayMesh" id="ArrayMesh_ky36l"]
+_surfaces = [{
+"aabb": AABB(-0.47070184, -0.42515135, -0.5391673, 0.94140375, 0.46030268, 1.0783348),
+"attribute_data": PackedByteArray("AACAPwAAAAAAAIA/AP//PgD//z4AAAAAAP//PgD//z4A//8+AAAAAAD//z4A//8+AAAAAAAAAAAAAAAAAP//PtVUVT8A//8+q6oqPwAAAACtoCw9oUchPwD9fz6DjgI/AP1/Pv1vfT/qaOo+37deP6uoKj4AAAAA9TR1P6FHIT/A/z8/g44CP8D/Pz/9b30/1VRVPwAAAADVVFU/AAAAANVUVT8A//8+q6oqPwD//z6rqio/AAAAAKuqKj8A//8+q6iqPgAAAACrqKo+AP//Pupo6j6hRyE/raAsPd+3Xj+rqKo+AAAAAKuoqj4A//8+q6gqPgD//z6rqCo+AAAAAKuoKj4A//8+9TR1P9+3Xj+Lygo/37deP4vKCj+hRyE/"),
+"format": 34359742487,
+"index_count": 60,
+"index_data": PackedByteArray("AAASAAEAEgAIAAEAEwAJABQACQAVABQAFgACABcAAgADABcABAAYAAUAGAAZAAUACwAKABoACgAbABoAGwAMABoADAANABoAHAAOAB0ADgAeAB0AHwAGACAABgAHACAADwAhABAAIQARABAAEQAiABAAIgAjABAA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 36,
+"vertex_data": PackedByteArray("cMj2O9X6Dz3eBgq/cMj2O3Ct2b7eBgq/A8X2O5L6Dz3jBgo//8T2O2et2b7jBgo/A8X2O5L6Dz3jBgo//8T2O2et2b7jBgo/cMj2O9X6Dz3eBgq/cMj2O3Ct2b7eBgq/1SPtPmWt2b4LYI2+1//wPqL6Dz3BroY+1f/wvpH6Dz3NsIa+cMj2O9X6Dz3eBgq/A8X2O5L6Dz3jBgo/1//wPqL6Dz3BroY+1f/wvpH6Dz3NsIa+1SPtPmWt2b4LYI2+cMj2O3Ct2b7eBgq//8T2O2et2b7jBgo/1SPtPoD6Dz0LYI2+1SPtPoD6Dz0LYI2+1SPtPmWt2b4LYI2+1//wPmmt2b7BroY+1//wPqL6Dz3BroY+1//wPmmt2b7BroY+2yPtvrL6Dz39XY0+2yPtvmut2b79XY0+1SPtPoD6Dz0LYI2+2yPtvrL6Dz39XY0+2yPtvrL6Dz39XY0+2yPtvmut2b79XY0+1f/wvmet2b7OsIa+1f/wvpH6Dz3NsIa+1f/wvmet2b7OsIa+1//wPmmt2b7BroY+2yPtvmut2b79XY0+1f/wvmet2b7OsIa+/v8k0QAAbNf+/yTRAABs19eu/3/+/2vX167/f/7/a9cnUf9/JtH/vydR/38m0f+/AADaLtsu/78AANou2y7/v/7/JNEAAGzX/f8AgP7//v//f/3//v//v/9//f/+//+//3/9//7//7//f/3//v//vwEA/38AgP+/AoAAAP7//z8CgAAA/v//PwKAAAD+//8//v8k0QAAbNf9/wCA/v/+//3/AID+//7//f8AgP7//v/Xrv9//v9r19eu/3/+/2vXJ1H/fybR/78nUf9/JtH/v/9//f/+//+//3/9//7//78BAP9/AID/vwEA/38AgP+/AQD/fwCA/78AANou2y7/vwAA2i7bLv+/AoAAAP7//z8CgAAA/v//PwKAAAD+//8/")
+}]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_0th08"]
 points = PackedVector3Array(0, 0.01, 0.5, 0.43, 0.01, 0.25, 0.43, 0.01, -0.25, 0, 0.01, -0.5, -0.43, 0.01, -0.25, -0.43, 0.01, 0.25)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aqd0d"]
-albedo_color = Color(1, 0.8, 0, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b4vmm"]
+albedo_color = Color(255, 204, 0, 1)
 metallic = 0.3
 roughness = 0.2
 
 [sub_resource type="BoxMesh" id="BoxMesh_aqd0d"]
 size = Vector3(0.43, 0.01, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dxvs5"]
+albedo_color = Color(255, 204, 0, 1)
+metallic = 0.3
+roughness = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_16k2m"]
+albedo_color = Color(255, 204, 0, 1)
+metallic = 0.3
+roughness = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lg7by"]
+albedo_color = Color(255, 204, 0, 1)
+metallic = 0.3
+roughness = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fjrkg"]
+albedo_color = Color(255, 204, 0, 1)
+metallic = 0.3
+roughness = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xpe1p"]
+albedo_color = Color(255, 204, 0, 1)
+metallic = 0.3
+roughness = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ta8q5"]
+albedo_color = Color(255, 204, 0, 1)
+metallic = 0.3
+roughness = 0.2
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_aqd0d"]
 top_radius = 0.2
@@ -31,7 +70,7 @@ bottom_radius = 0.2
 height = 0.02
 
 [node name="Hex" type="MeshInstance3D" unique_id=1141399512 node_paths=PackedStringArray("NodeLabel", "Outline", "Connectors", "StartMarker", "EndMarker")]
-material_override = SubResource("StandardMaterial3D_ybivv")
+material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("2_2eh4c")
 script = ExtResource("3_ky36l")
 NodeLabel = NodePath("DebugLabel")
@@ -40,10 +79,10 @@ Connectors = [NodePath("Connectors/A"), NodePath("Connectors/B"), NodePath("Conn
 StartMarker = NodePath("Marker")
 EndMarker = NodePath("Marker")
 
-[node name="Outline" type="MeshInstance3D" parent="." unique_id=1662715393]
+[node name="Outline" type="MeshInstance3D" parent="." unique_id=191846574]
 visible = false
-material_override = SubResource("ShaderMaterial_aqd0d")
-mesh = ExtResource("2_2eh4c")
+material_override = SubResource("StandardMaterial3D_ybivv")
+mesh = SubResource("ArrayMesh_ky36l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1509353101]
 
@@ -57,7 +96,7 @@ transform = Transform3D(-0.50000006, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.50
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Connectors/A" unique_id=19474358]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 0)
-material_override = SubResource("StandardMaterial3D_aqd0d")
+material_override = SubResource("StandardMaterial3D_b4vmm")
 mesh = SubResource("BoxMesh_aqd0d")
 
 [node name="B" type="Node3D" parent="Connectors" unique_id=902949528]
@@ -65,14 +104,14 @@ transform = Transform3D(0.49999997, 0, 0.86602545, 0, 1, 0, -0.86602545, 0, 0.49
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Connectors/B" unique_id=1853093665]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 0)
-material_override = SubResource("StandardMaterial3D_aqd0d")
+material_override = SubResource("StandardMaterial3D_dxvs5")
 mesh = SubResource("BoxMesh_aqd0d")
 
 [node name="C" type="Node3D" parent="Connectors" unique_id=144841668]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Connectors/C" unique_id=1301153752]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 0)
-material_override = SubResource("StandardMaterial3D_aqd0d")
+material_override = SubResource("StandardMaterial3D_16k2m")
 mesh = SubResource("BoxMesh_aqd0d")
 
 [node name="D" type="Node3D" parent="Connectors" unique_id=428730433]
@@ -80,7 +119,7 @@ transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Connectors/D" unique_id=1058952301]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 0)
-material_override = SubResource("StandardMaterial3D_aqd0d")
+material_override = SubResource("StandardMaterial3D_lg7by")
 mesh = SubResource("BoxMesh_aqd0d")
 
 [node name="E" type="Node3D" parent="Connectors" unique_id=1483526238]
@@ -88,7 +127,7 @@ transform = Transform3D(-0.4999999, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, -0.4
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Connectors/E" unique_id=2122357742]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 0)
-material_override = SubResource("StandardMaterial3D_aqd0d")
+material_override = SubResource("StandardMaterial3D_fjrkg")
 mesh = SubResource("BoxMesh_aqd0d")
 
 [node name="F" type="Node3D" parent="Connectors" unique_id=257931317]
@@ -96,15 +135,15 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Connectors/F" unique_id=1688060319]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 0)
-material_override = SubResource("StandardMaterial3D_aqd0d")
+material_override = SubResource("StandardMaterial3D_xpe1p")
 mesh = SubResource("BoxMesh_aqd0d")
 
 [node name="Marker" type="MeshInstance3D" parent="." unique_id=1256658302]
-material_override = SubResource("StandardMaterial3D_aqd0d")
+material_override = SubResource("StandardMaterial3D_ta8q5")
 mesh = SubResource("CylinderMesh_aqd0d")
 
 [node name="DebugLabel" type="Label3D" parent="." unique_id=1058478315]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15451682, 0)
 billboard = 1
-text = "Test"
+text = "Hex"
 font_size = 48
