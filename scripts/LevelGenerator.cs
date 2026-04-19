@@ -20,8 +20,8 @@ public partial class LevelGenerator : Node
 	
 	public Hex GenerateLevel()
 	{
-		// generiert den nächsten level abschnitt und gibt das nächste ziel zurück
-		return null;
+		generateNextLevel();
+		return endHex;
 	}
 
 	public void generateNextLevel()
