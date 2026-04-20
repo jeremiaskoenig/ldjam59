@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://x7dlpkxku8e"]
+[gd_scene format=3 uid="uid://dsxnxiq5afg1l"]
 
 [ext_resource type="PackedScene" uid="uid://dv1e1762cgg04" path="res://prefabs/camera_transition.tscn" id="1_eb251"]
 [ext_resource type="Script" uid="uid://bj0h66njw0c22" path="res://scripts/DebugLevelGenerator.cs" id="1_lwfei"]
@@ -10,12 +10,14 @@
 [ext_resource type="AudioStream" uid="uid://yrdtfn1n1jdd" path="res://sounds/bump.wav" id="5_ahhli"]
 [ext_resource type="Script" uid="uid://b232x6fi5gay1" path="res://scripts/CameraInteraction.cs" id="7_ahhli"]
 [ext_resource type="Script" uid="uid://bjuf71vnwkbeb" path="res://scripts/GameState.cs" id="7_l44fa"]
+[ext_resource type="Texture2D" uid="uid://bthsj1ft8sv0p" path="res://textures/circuit_3665_1776685837532.png" id="9_e3lnv"]
 [ext_resource type="Texture2D" uid="uid://dqmow2hpln3ky" path="res://textures/green.png" id="10_167fd"]
 [ext_resource type="Script" uid="uid://c61c75qh78x62" path="res://tools/DebugOutput.cs" id="11_l44fa"]
 [ext_resource type="ArrayMesh" uid="uid://djwlhgcdxdmtm" path="res://meshes/hex.obj" id="11_pcvme"]
 [ext_resource type="ArrayMesh" uid="uid://cppog7j3sab08" path="res://meshes/billboard.obj" id="13_r3311"]
 [ext_resource type="Texture2D" uid="uid://b6vctk5unybnq" path="res://textures/billboard.png" id="13_uho00"]
 [ext_resource type="Texture2D" uid="uid://c6mlshegexbgc" path="res://textures/logo.png" id="15_eb251"]
+[ext_resource type="Script" uid="uid://d026yu1vw2k3x" path="res://ParallaxBoden.cs" id="18_318f5"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_uho00"]
 font_size = 32
@@ -34,6 +36,15 @@ albedo_texture = ExtResource("15_eb251")
 
 [sub_resource type="QuadMesh" id="QuadMesh_u58v4"]
 size = Vector2(3, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_167fd"]
+albedo_color = Color(1, 1, 1, 0)
+albedo_texture = ExtResource("9_e3lnv")
+uv1_scale = Vector3(9, 9, 9)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_f66im"]
+material = SubResource("StandardMaterial3D_167fd")
+size = Vector2(500, 500)
 
 [node name="Node3D" type="Node3D" unique_id=1314113066]
 
@@ -594,3 +605,7 @@ mesh = SubResource("QuadMesh_u58v4")
 [node name="BillboardCamera" type="Camera3D" parent="." unique_id=1855856373]
 transform = Transform3D(0.92554086, -0.0013508498, 0.3786454, 0, 0.9999936, 0.003567563, -0.3786478, -0.003301925, 0.92553496, 2.308957, 2.242901, 3.1974277)
 current = true
+
+[node name="Background" type="MeshInstance3D" parent="." unique_id=1326234328]
+mesh = SubResource("PlaneMesh_f66im")
+script = ExtResource("18_318f5")
