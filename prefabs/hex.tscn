@@ -1,6 +1,5 @@
 [gd_scene format=4 uid="uid://6ualdu5e6i8n"]
 
-[ext_resource type="Texture2D" uid="uid://dqmow2hpln3ky" path="res://textures/green.png" id="1_ky36l"]
 [ext_resource type="ArrayMesh" uid="uid://djwlhgcdxdmtm" path="res://meshes/hex.obj" id="2_2eh4c"]
 [ext_resource type="Script" uid="uid://dack8jbfrp55w" path="res://scripts/Hex.cs" id="3_ky36l"]
 [ext_resource type="Material" uid="uid://b527e47vf1qi0" path="res://materials/wire_material.tres" id="4_aqd0d"]
@@ -17,7 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://l1v4ecjeylky" path="res://prefabs/hex_disruption_effect.tscn" id="15_54wm7"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aqd0d"]
-albedo_texture = ExtResource("1_ky36l")
+albedo_color = Color(0.09391496, 0.2372269, 0.033541694, 1)
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_ky36l"]
 _surfaces = [{
@@ -38,11 +37,11 @@ points = PackedVector3Array(0, 0.01, 0.5, 0.43, 0.01, 0.25, 0.43, 0.01, -0.25, 0
 [sub_resource type="BoxMesh" id="BoxMesh_aqd0d"]
 size = Vector3(0.43, 0.01, 0.05)
 
-[node name="Hex" type="MeshInstance3D" unique_id=1141399512 node_paths=PackedStringArray("NodeLabel", "Outline", "Connectors", "StartMarker", "EndMarker", "DisruptorMarker", "DisruptionEffect")]
+[node name="Hex" type="MeshInstance3D" unique_id=1141399512 node_paths=PackedStringArray("Outline", "Connectors", "StartMarker", "EndMarker", "DisruptorMarker", "DisruptionEffect")]
 material_override = SubResource("StandardMaterial3D_aqd0d")
+visibility_range_end = 20.0
 mesh = ExtResource("2_2eh4c")
 script = ExtResource("3_ky36l")
-NodeLabel = NodePath("DebugLabel")
 Materials = Dictionary[String, Material]({
 "marker_end": ExtResource("8_fjrkg"),
 "marker_start": ExtResource("5_ybivv"),
@@ -72,50 +71,33 @@ shape = SubResource("ConvexPolygonShape3D_0th08")
 
 [node name="Connectors" type="Node3D" parent="." unique_id=666631471]
 
-[node name="A" type="Node3D" parent="Connectors" unique_id=1417258516]
-transform = Transform3D(-0.50000006, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.50000006, 0, 0, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Connectors/A" unique_id=19474358]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 0)
+[node name="A" type="MeshInstance3D" parent="Connectors" unique_id=19474358]
+transform = Transform3D(-0.50000006, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.50000006, -0.10750002, 0.01, -0.18619546)
 material_override = ExtResource("4_aqd0d")
 mesh = SubResource("BoxMesh_aqd0d")
 
-[node name="B" type="Node3D" parent="Connectors" unique_id=902949528]
-transform = Transform3D(0.49999997, 0, 0.86602545, 0, 1, 0, -0.86602545, 0, 0.49999997, 0, 0, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Connectors/B" unique_id=1853093665]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 0)
+[node name="B" type="MeshInstance3D" parent="Connectors" unique_id=1853093665]
+transform = Transform3D(0.49999997, 0, 0.86602545, 0, 1, 0, -0.86602545, 0, 0.49999997, 0.107499994, 0.01, -0.18619548)
 material_override = ExtResource("4_aqd0d")
 mesh = SubResource("BoxMesh_aqd0d")
 
-[node name="C" type="Node3D" parent="Connectors" unique_id=144841668]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Connectors/C" unique_id=1301153752]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 0)
+[node name="C" type="MeshInstance3D" parent="Connectors" unique_id=1301153752]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 7.450581e-09)
 material_override = ExtResource("4_aqd0d")
 mesh = SubResource("BoxMesh_aqd0d")
 
-[node name="D" type="Node3D" parent="Connectors" unique_id=428730433]
-transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49999997, 0, 0, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Connectors/D" unique_id=1058952301]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 0)
+[node name="D" type="MeshInstance3D" parent="Connectors" unique_id=1058952301]
+transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49999997, 0.107499994, 0.01, 0.18619548)
 material_override = ExtResource("4_aqd0d")
 mesh = SubResource("BoxMesh_aqd0d")
 
-[node name="E" type="Node3D" parent="Connectors" unique_id=1483526238]
-transform = Transform3D(-0.4999999, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, -0.4999999, 0, 0, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Connectors/E" unique_id=2122357742]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 0)
+[node name="E" type="MeshInstance3D" parent="Connectors" unique_id=2122357742]
+transform = Transform3D(-0.4999999, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, -0.4999999, -0.10749998, 0.01, 0.18619548)
 material_override = ExtResource("4_aqd0d")
 mesh = SubResource("BoxMesh_aqd0d")
 
-[node name="F" type="Node3D" parent="Connectors" unique_id=257931317]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Connectors/F" unique_id=1688060319]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.215, 0.01, 0)
+[node name="F" type="MeshInstance3D" parent="Connectors" unique_id=1688060319]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.215, 0.01, 1.8795896e-08)
 material_override = ExtResource("4_aqd0d")
 mesh = SubResource("BoxMesh_aqd0d")
 
@@ -127,9 +109,3 @@ mesh = SubResource("BoxMesh_aqd0d")
 
 [node name="DisruptionEffect" parent="." unique_id=1281178481 instance=ExtResource("15_54wm7")]
 visible = false
-
-[node name="DebugLabel" type="Label3D" parent="." unique_id=1058478315]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15451682, 0)
-billboard = 1
-text = "Hex"
-font_size = 48

@@ -5,8 +5,6 @@ using Godot.Collections;
 
 public partial class Hex : MeshInstance3D
 {
-    [Export] public Label3D NodeLabel { get; set; }
-    
     [Export] public Dictionary<string, Material> Materials { get; set; }
 
     private Vector3 lockedPosition;
@@ -29,14 +27,12 @@ public partial class Hex : MeshInstance3D
 
     [Export] public MeshInstance3D Outline { get; set; }
 
-    [Export] public Node3D[] Connectors { get; set; }
+    [Export] public MeshInstance3D[] Connectors { get; set; }
 
     [Export] public Node3D StartMarker { get; set; }
     [Export] public Node3D EndMarker { get; set; }
     [Export] public Node3D DisruptorMarker { get; set; }
     [Export] public Node3D DisruptionEffect { get; set; }
-
-    [Export] public HexStateType StartType { get; set; }
 
     public Vector2I Coordinates { get; set; }
 
@@ -62,9 +58,14 @@ public partial class Hex : MeshInstance3D
             {
                 connector.Visible = false;
             }
-            startMarker.Visible = false;
-            endMarker.Visible = false;
-            disruptorMarker.Visible = false;
+            if (startMarker != null)
+                startMarker.Visible = false;
+                
+            if (endMarker != null)
+                endMarker.Visible = false;
+            
+            if (disruptorMarker != null)
+                disruptorMarker.Visible = false;
 
             if (StateType == HexStateType.Connection)
             {
@@ -117,7 +118,10 @@ public partial class Hex : MeshInstance3D
 
     public void UpdateDisruptedVisuals(bool disrupted)
     {
-        DisruptionEffect.Visible = disrupted;
+        if (DisruptionEffect != null)
+        {
+            DisruptionEffect.Visible = disrupted;
+        }
         ApplyForWireMeshes(mesh =>
         {
             if (mesh.MaterialOverride != Materials["wire_solved"])
@@ -131,7 +135,6 @@ public partial class Hex : MeshInstance3D
     {
         State = state;
         State.UpdateView(Connectors, StartMarker, EndMarker, DisruptorMarker);
-        NodeLabel.Text = Name.ToString().Replace("Hex_", "").Replace("_", " ");
     }
 
     private void RandomizeTile()
@@ -141,7 +144,55 @@ public partial class Hex : MeshInstance3D
 
     public void SetSolved()
     {
-        DisruptionEffect.Visible = false;
+        if (DisruptionEffect != null)
+        {
+            DisruptionEffect.QueueFree();
+        }
+        DisruptionEffect = null;
+
+        IsSwapMode = false;
+        IsRotationMode = false;
+
+        switch (State.StateType)
+        {
+            case HexStateType.Connection:
+                EndMarker?.QueueFree();
+                EndMarker = null;
+                StartMarker?.QueueFree();
+                StartMarker = null;
+                DisruptorMarker?.QueueFree();
+                DisruptorMarker = null;
+                break;
+            case HexStateType.Start:
+                EndMarker?.QueueFree();
+                EndMarker = null;
+                DisruptorMarker?.QueueFree();
+                DisruptorMarker = null;
+                break;
+            case HexStateType.End:
+                StartMarker?.QueueFree();
+                StartMarker = null;
+                DisruptorMarker?.QueueFree();
+                DisruptorMarker = null;
+                break;
+            case HexStateType.Disruptor:
+                EndMarker?.QueueFree();
+                EndMarker = null;
+                StartMarker?.QueueFree();
+                StartMarker = null;
+                break;
+
+        }
+
+        if (State.StateType != HexStateType.Connection)
+        {
+            ApplyForWireMeshes(mesh =>
+            {
+                mesh.QueueFree();
+            });
+            Connectors = [];
+        }
+
         ApplyForWireMeshes(mesh =>
         {
             mesh.MaterialOverride = Materials["wire_solved"];
@@ -152,7 +203,7 @@ public partial class Hex : MeshInstance3D
     {
         foreach (var connector in Connectors)
         {
-            apply(connector.GetChild<MeshInstance3D>(0));
+            apply(connector);
         }
     }
 
@@ -178,24 +229,6 @@ public partial class Hex : MeshInstance3D
         this.lockedPosition = pos;
     }
 
-    public override void _Ready()
-    {
-        this.lockedPosition = this.Position;
-
-        switch (StartType)
-        {
-            case HexStateType.Connection:
-                RandomizeTile();
-                break;
-            case HexStateType.Start:
-                UpdateState(new HexState(0, 0, HexStateType.Start));
-                break;
-            case HexStateType.End:
-                UpdateState(new HexState(0, 0, HexStateType.End));
-                break;
-        }
-    }
-
     public override void _PhysicsProcess(double delta)
     {
         HoverFrames = Mathf.Max(0, HoverFrames - 1);
@@ -215,8 +248,6 @@ public partial class Hex : MeshInstance3D
 
     public override void _Process(double delta)
     {
-        NodeLabel.Visible = CameraInteraction.DebugShowLabels;
-
         if (SwapAnimationFrames > 0)
         {
             float factor;

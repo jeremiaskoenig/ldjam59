@@ -11,9 +11,10 @@ config_version=5
 [application]
 
 config/name="SignalChaser"
+config/version="1.0.1"
 run/main_scene="uid://x7dlpkxku8e"
 config/features=PackedStringArray("4.6", "C#", "Mobile")
-config/icon="res://icon.svg"
+config/icon="uid://bad6dmjeq8c12"
 
 [dotnet]
 
@@ -27,3 +28,4 @@ project/assembly_name="LudumDare59"
 
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
+occlusion_culling/use_occlusion_culling=true

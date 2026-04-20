@@ -6,21 +6,9 @@ using System.Linq;
 
 public partial class GridManager : Node
 {
-    [Export] public Label DebugInfo { get; set; }
-    [Export] public Button DebugButton { get; set; }
-
     private readonly Dictionary<(int x, int y), Hex> hexStore = new();
 
     public int MaxY => hexStore.Any() ? hexStore.Keys.Max(p => p.y) : 0;
-
-    public override void _Ready()
-    {
-        DebugButton.Pressed += () =>
-        {
-            Debug();
-        };
-    }
-
 
     public void RegisterHex(int x, int y, Hex hex)
     {
@@ -133,18 +121,9 @@ public partial class GridManager : Node
         var startHex = hexStore.Values.Where(h => h.State.StateType == Hex.HexStateType.Start).OrderBy(h => h.Coordinates.Y).LastOrDefault();
         if (startHex == null)
         {
-            var totalStartHexes = hexStore.Values.Count(h => h.State.StateType == Hex.HexStateType.Start);
-
-            GD.Print($"GetCurrentLevelHexes() -> startHex null, total {totalStartHexes}");
-
             return [];
         }
-        var result = hexStore.Where(d => d.Key.y > startHex.Coordinates.Y).Select(d => d.Value);
-        if (result.Any(h => h == null))
-        {
-            GD.Print("Null Hex found!");
-        }
-        return result.Where(h => h != null);
+        return hexStore.Where(d => d.Key.y > startHex.Coordinates.Y).Select(d => d.Value);
     }
 
     public void UpdateDisruptedHexes()
@@ -217,39 +196,6 @@ public partial class GridManager : Node
 
     private Hex debugStartHex = null;
     private Hex debugEndHex = null;
-
-    public void Debug()
-    {
-        debugStartHex ??= hexStore.Values.First(p => p.State.StateType == Hex.HexStateType.Start);
-        debugEndHex ??= hexStore.Values.First(p => p.State.StateType == Hex.HexStateType.End);
-        
-        var result = CheckConnection(tt(debugStartHex.Coordinates), tt(debugEndHex.Coordinates));
-
-        DebugInfo.Text = $"Success: {result.Success}";
-
-        if (result.Success)
-        {
-            foreach (var hex in result.Path)
-            {
-                hex.SetSolved();
-                hex.State.IsLocked = true;
-            }
-            
-            DeactivateUnused(debugEndHex.Coordinates.Y);
-        }
-
-        (int x, int y) tt(Vector2I v) => (v.X, v.Y);   
-    }
-
-    public void Debug(Hex hex)
-    {
-        DebugInfo.Text = $"Node: {hex.Name}";
-        DebugInfo.Text += "\nValid Neighbours:";
-        foreach (var neighbour in GetValidNeighbours(hex.Coordinates.X, hex.Coordinates.Y))
-        {
-            DebugInfo.Text += $"\n- {neighbour.Name}";
-        }
-    }
 
     private float stepX = 0.43f;
     private float stepY = 0.75f;

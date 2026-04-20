@@ -44,16 +44,13 @@ public partial class CameraInteraction : Camera3D
     public override void _Ready()
     {
         zOffsetToTileRow = GlobalPosition.Z - 3.75f;
-        GD.Print($"Offset detected: {zOffsetToTileRow}");
+        //GD.Print($"Offset detected: {zOffsetToTileRow}");
     }
 
     private Tween currentMovement;
 
     public void MoveToFocusHexRow(int y, bool instant = false, float duration = 1)
     {
-        //startLocation = this.GlobalPosition;
-        //targetLocation = new(7, 6.4f, GridManager.GetAt(0, y).GlobalPosition.Z + zOffsetToTileRow);
-
         if (currentMovement != null)
         {
             currentMovement.Stop();
@@ -63,12 +60,12 @@ public partial class CameraInteraction : Camera3D
         Vector3 target = new(6, 4.5f, GridManager.GetNominalPosition(0, y).Z + zOffsetToTileRow);
         if (instant)
         {
-            GD.Print($"Snapping to target: {target}");
+            //GD.Print($"Snapping to target: {target}");
             GlobalPosition = target;
         }
         else
         {
-            GD.Print($"Tweening to target: {target} over {duration} seconds");
+            //GD.Print($"Tweening to target: {target} over {duration} seconds");
 
             currentMovement = GetTree().CreateTween()
                                     .SetTrans(Tween.TransitionType.Cubic);
@@ -108,49 +105,41 @@ public partial class CameraInteraction : Camera3D
             var hex = GetHexOnCursor();
             if (hex?.State.CanInteract() ?? false)
             {
-                if (mouseEvent.IsReleased())
+                if (mouseEvent.IsReleased() && mouseEvent.ButtonIndex == MouseButton.Left)
                 {
-                    if (mouseEvent.ButtonIndex == MouseButton.Left)
+                    if (currentRotateHex != null)
                     {
-                        if (currentRotateHex != null)
-                        {
-                            currentRotateHex.IsRotationMode = false;
-                            currentRotateHex = null;
-                        }
-
-                        if (currentSwapHex == null)
-                        {
-                            PlaySound(SOUND_CLICK);
-                            currentSwapHex = hex;
-                            currentSwapHex.IsSwapMode = true;
-                        }
-                        else if (currentSwapHex == hex)
-                        {
-                            PlaySound(SOUND_CLICK);
-                            currentSwapHex.IsSwapMode = false;
-                            currentSwapHex = null;
-                        }
-                        else
-                        {
-                            PlaySound(SOUND_SWAP);
-
-                            var stateCurrentHex = currentSwapHex.State;
-                            var targetHex = hex.State;
-
-                            currentSwapHex.UpdateState(targetHex);
-                            hex.UpdateState(stateCurrentHex);
-
-                            currentSwapHex.AnimateSwap();
-                            hex.AnimateSwap();
-
-                            currentSwapHex.IsSwapMode = false;
-                            currentSwapHex = null;
-                        }
+                        currentRotateHex.IsRotationMode = false;
+                        currentRotateHex = null;
                     }
-                    else if (mouseEvent.ButtonIndex == MouseButton.Middle)
+
+                    if (currentSwapHex == null)
                     {
                         PlaySound(SOUND_CLICK);
-                        GridManager.Debug(hex);
+                        currentSwapHex = hex;
+                        currentSwapHex.IsSwapMode = true;
+                    }
+                    else if (currentSwapHex == hex)
+                    {
+                        PlaySound(SOUND_CLICK);
+                        currentSwapHex.IsSwapMode = false;
+                        currentSwapHex = null;
+                    }
+                    else
+                    {
+                        PlaySound(SOUND_SWAP);
+
+                        var stateCurrentHex = currentSwapHex.State;
+                        var targetHex = hex.State;
+
+                        currentSwapHex.UpdateState(targetHex);
+                        hex.UpdateState(stateCurrentHex);
+
+                        currentSwapHex.AnimateSwap();
+                        hex.AnimateSwap();
+
+                        currentSwapHex.IsSwapMode = false;
+                        currentSwapHex = null;
                     }
                 }
                 else if (mouseEvent.IsPressed())
@@ -213,6 +202,11 @@ public partial class CameraInteraction : Camera3D
         }
     }
 
+    public void ResetLevel()
+    {
+        currentSwapHex = null;
+        currentRotateHex = null;
+    }
 
     public static bool DebugShowLabels { get; private set; }
     public bool IsInputLocked { get; internal set; }

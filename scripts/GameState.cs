@@ -111,6 +111,7 @@ public partial class GameState : Node
         RoundManager.StartGame();
         TransitionCamera.TransitionFinished += () =>
         {
+            GD.Print("Enabling Ingame UI");
             IngameUI.Visible = true;
             RoundManager.IsRunning = true;
         };

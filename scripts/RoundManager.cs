@@ -9,6 +9,7 @@ public partial class RoundManager : Node
     [Export] public DebugLevelGenerator LevelGenerator { get; set; }
     [Export] public GridManager GridManager { get; set; }
     [Export] public ProgressBar RoundProgress { get; set; }
+    [Export] public Control IngameUI { get; set; }
     [Export] public int RoundDelay { get; set; }
     [Export] public Button RetryButton { get; set; }
     [Export] public Label3D ScoreLabel { get; set; }
@@ -33,7 +34,9 @@ public partial class RoundManager : Node
         endHex = null;
         IsRunning = false;
         RoundProgress.Value = 0;
+        RoundProgress.MaxValue = 30;
         LevelGenerator.ResetLevel();
+        CameraInteraction.ResetLevel();
     }
 
     public void StartGame()
@@ -83,7 +86,7 @@ public partial class RoundManager : Node
             else
             {
                 IsRunning = false;
-                RoundProgress.Visible = false;
+                IngameUI.Visible = false;
                 PlayerLost?.Invoke();
             }
 
@@ -118,7 +121,13 @@ public partial class RoundManager : Node
     public void StartNextLevel()
     {
         CurrentRound++;
-        GD.Print($"Starting round {CurrentRound}");
+        //GD.Print($"Starting round {CurrentRound}");
+
+        if (CurrentRound > 50 && CurrentRound % 5 == 0 && RoundProgress.MaxValue > 20)
+        {
+            RoundProgress.MaxValue -= 1;
+            //GD.Print($"Decreasing round time to {RoundProgress.MaxValue}");
+        }
 
         var targetRow = endHex.Coordinates.Y;
         startHexes.Push(endHex);
