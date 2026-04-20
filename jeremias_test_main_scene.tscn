@@ -17,7 +17,9 @@
 [ext_resource type="ArrayMesh" uid="uid://cppog7j3sab08" path="res://meshes/billboard.obj" id="13_r3311"]
 [ext_resource type="Texture2D" uid="uid://b6vctk5unybnq" path="res://textures/billboard.png" id="13_uho00"]
 [ext_resource type="Texture2D" uid="uid://c6mlshegexbgc" path="res://textures/logo.png" id="15_eb251"]
+[ext_resource type="Texture2D" uid="uid://dx8olo8hu6hut" path="res://textures/circuit_top_large.png" id="17_1j778"]
 [ext_resource type="Script" uid="uid://d026yu1vw2k3x" path="res://ParallaxBoden.cs" id="18_318f5"]
+[ext_resource type="Texture2D" uid="uid://cx0rl7m4ph0ma" path="res://textures/circuit_top_rect.png" id="20_1j778"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_uho00"]
 font_size = 32
@@ -37,13 +39,34 @@ albedo_texture = ExtResource("15_eb251")
 [sub_resource type="QuadMesh" id="QuadMesh_u58v4"]
 size = Vector2(3, 1)
 
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_318f5"]
+panorama = ExtResource("17_1j778")
+
+[sub_resource type="Sky" id="Sky_f66im"]
+sky_material = SubResource("PanoramaSkyMaterial_318f5")
+
+[sub_resource type="Environment" id="Environment_318f5"]
+background_mode = 2
+sky = SubResource("Sky_f66im")
+sky_custom_fov = 90.0
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_167fd"]
+cull_mode = 2
 albedo_color = Color(1, 1, 1, 0)
 albedo_texture = ExtResource("9_e3lnv")
 uv1_scale = Vector3(9, 9, 9)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_f66im"]
 material = SubResource("StandardMaterial3D_167fd")
+size = Vector2(500, 500)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_acmr4"]
+cull_mode = 2
+albedo_texture = ExtResource("20_1j778")
+uv1_scale = Vector3(9, 9, 9)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_s7npt"]
+material = SubResource("StandardMaterial3D_acmr4")
 size = Vector2(500, 500)
 
 [node name="Node3D" type="Node3D" unique_id=1314113066]
@@ -606,6 +629,16 @@ mesh = SubResource("QuadMesh_u58v4")
 transform = Transform3D(0.92554086, -0.0013508498, 0.3786454, 0, 0.9999936, 0.003567563, -0.3786478, -0.003301925, 0.92553496, 2.308957, 2.242901, 3.1974277)
 current = true
 
-[node name="Background" type="MeshInstance3D" parent="." unique_id=1326234328]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1132959471]
+environment = SubResource("Environment_318f5")
+
+[node name="Background_lower" type="MeshInstance3D" parent="." unique_id=1326234328]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -20, 0)
 mesh = SubResource("PlaneMesh_f66im")
+script = ExtResource("18_318f5")
+
+[node name="Background_higher" type="MeshInstance3D" parent="." unique_id=2144382270]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+visible = false
+mesh = SubResource("PlaneMesh_s7npt")
 script = ExtResource("18_318f5")
