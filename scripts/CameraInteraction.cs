@@ -49,7 +49,7 @@ public partial class CameraInteraction : Camera3D
 
     private Tween currentMovement;
 
-    public void MoveToFocusHexRow(int y, bool instant = false)
+    public void MoveToFocusHexRow(int y, bool instant = false, float duration = 1)
     {
         //startLocation = this.GlobalPosition;
         //targetLocation = new(7, 6.4f, GridManager.GetAt(0, y).GlobalPosition.Z + zOffsetToTileRow);
@@ -68,12 +68,12 @@ public partial class CameraInteraction : Camera3D
         }
         else
         {
-            GD.Print($"Tweening to target: {target}");
+            GD.Print($"Tweening to target: {target} over {duration} seconds");
 
             currentMovement = GetTree().CreateTween()
-                                    .SetTrans(Tween.TransitionType.Cubic)
-                                    .SetEase(Tween.EaseType.Out);
-            currentMovement.TweenProperty(this, "global_position", target, 1);
+                                    .SetTrans(Tween.TransitionType.Cubic);
+                                    //.SetEase(Tween.EaseType.);
+            currentMovement.TweenProperty(this, "global_position", target, duration);
             
             currentMovement.Finished += () =>
             {
@@ -100,6 +100,9 @@ public partial class CameraInteraction : Camera3D
 
     public override void _Input(InputEvent @event)
     {
+        if (IsInputLocked)
+            return;
+
         if (@event is InputEventMouseButton mouseEvent)
         {
             var hex = GetHexOnCursor();
@@ -190,6 +193,9 @@ public partial class CameraInteraction : Camera3D
 
     public override void _PhysicsProcess(double delta)
     {
+        if (IsInputLocked)
+            return;
+
         var hex = GetHexOnCursor();
         if (hex != null && hex.State.CanInteract())
         {
@@ -207,22 +213,8 @@ public partial class CameraInteraction : Camera3D
         }
     }
 
-    public override void _Process(double delta)
-    {
-        //if (startLocation.DistanceTo(targetLocation) > 0.0001f)
-        //{
-        //    var totalDistance = startLocation.DistanceTo(targetLocation);
-        //    if (Mathf.Abs(totalDistance) < 0.0001f)
-        //        return;
-        //
-        //    var speed = 3.0f;
-        //    var t = speed * (float)delta / totalDistance;
-        //    t = Mathf.Clamp(t, 0, 1);
-        //
-        //    Position = Position.Lerp(targetLocation, t);       
-        //}
-    }
-
 
     public static bool DebugShowLabels { get; private set; }
+    public bool IsInputLocked { get; internal set; }
+
 }

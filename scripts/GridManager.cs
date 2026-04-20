@@ -128,7 +128,7 @@ public partial class GridManager : Node
         return (false, []);
     }
 
-    private IEnumerable<Hex> GetCurrentLevelHexes()
+    public IEnumerable<Hex> GetCurrentLevelHexes()
     {
         var startHex = hexStore.Values.Where(h => h.State.StateType == Hex.HexStateType.Start).OrderBy(h => h.Coordinates.Y).LastOrDefault();
         if (startHex == null)
@@ -201,9 +201,17 @@ public partial class GridManager : Node
 
     public void DeactivateUnused(int y)
     {
+        List<Vector2I> indicesToRemove = [];
+
         foreach (var hex in hexStore.Values.Where(h => h.Coordinates.Y <= y && h.State.CanInteract()))
         {
             hex.Deactivate();
+            indicesToRemove.Add(hex.Coordinates);
+        }
+
+        foreach (var index in indicesToRemove)
+        {
+            hexStore.Remove((index.X, index.Y));
         }
     }
 
@@ -257,5 +265,14 @@ public partial class GridManager : Node
         }
 
         return new(xPos, yPos, zPos);
+    }
+
+    public void ResetLevel()
+    {
+        foreach (var hex in hexStore.Values)
+        {
+            hex.QueueFree();
+        }
+        hexStore.Clear();
     }
 }

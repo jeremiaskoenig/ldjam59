@@ -1,5 +1,5 @@
 using Godot;
-using System;
+using System.Linq;
 
 public partial class DebugLevelGenerator : Node
 {
@@ -21,7 +21,13 @@ public partial class DebugLevelGenerator : Node
     private float stepX = 0.43f;
     private float stepY = 0.75f;
     private float heightOffsetFactor = 0.05f;
-    
+
+    public void ResetLevel()
+    {
+        startHex = null;
+        endHex = null;
+        CurrentLevel = 0;
+    }    
 
     public Hex GenerateLevel()
     {
@@ -44,10 +50,18 @@ public partial class DebugLevelGenerator : Node
             startHex = endHex;
             startHex.UpdateState(global::Hex.HexState.FromState(global::Hex.HexStateType.Start));
             
-            var endX = GD.RandRange(4, baseWidth - 5);
-            var endY = GD.RandRange(startHex.Coordinates.Y + 2, startHex.Coordinates.Y + baseLength - 2);
-
-            endHex = GridManager.GetAt(endX, endY);
+            endHex = null;
+            var currentDisruptors = GridManager.GetCurrentLevelHexes().Where(h => h.State.StateType == global::Hex.HexStateType.Disruptor);
+            while (endHex == null)
+            {
+                var endX = GD.RandRange(3, baseWidth - 4);
+                var endY = GD.RandRange(startHex.Coordinates.Y + 2, startHex.Coordinates.Y + baseLength - 2);
+                var newEnd = new Vector2I(endX, endY);
+                if (currentDisruptors.All(d => d.Coordinates.DistanceTo(newEnd) > 2))
+                {
+                    endHex = GridManager.GetAt(endX, endY);
+                }
+            }
             endHex.UpdateState(global::Hex.HexState.FromState(global::Hex.HexStateType.End));
         }
         else

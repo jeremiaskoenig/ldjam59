@@ -178,11 +178,6 @@ public partial class Hex : MeshInstance3D
         this.lockedPosition = pos;
     }
 
-    private static void MakeMaterialUnique(MeshInstance3D node)
-    {
-        node.MaterialOverride = node.MaterialOverride.Duplicate() as Material;
-    }
-
     public override void _Ready()
     {
         this.lockedPosition = this.Position;

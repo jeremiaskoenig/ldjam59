@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dsxnxiq5afg1l"]
+[gd_scene format=3 uid="uid://x7dlpkxku8e"]
 
 [ext_resource type="PackedScene" uid="uid://dv1e1762cgg04" path="res://prefabs/camera_transition.tscn" id="1_eb251"]
 [ext_resource type="Script" uid="uid://bj0h66njw0c22" path="res://scripts/DebugLevelGenerator.cs" id="1_lwfei"]
@@ -11,21 +11,18 @@
 [ext_resource type="Script" uid="uid://b232x6fi5gay1" path="res://scripts/CameraInteraction.cs" id="7_ahhli"]
 [ext_resource type="Script" uid="uid://bjuf71vnwkbeb" path="res://scripts/GameState.cs" id="7_l44fa"]
 [ext_resource type="Texture2D" uid="uid://bthsj1ft8sv0p" path="res://textures/circuit_3665_1776685837532.png" id="9_e3lnv"]
-[ext_resource type="Texture2D" uid="uid://dqmow2hpln3ky" path="res://textures/green.png" id="10_167fd"]
-[ext_resource type="Script" uid="uid://c61c75qh78x62" path="res://tools/DebugOutput.cs" id="11_l44fa"]
 [ext_resource type="ArrayMesh" uid="uid://djwlhgcdxdmtm" path="res://meshes/hex.obj" id="11_pcvme"]
 [ext_resource type="ArrayMesh" uid="uid://cppog7j3sab08" path="res://meshes/billboard.obj" id="13_r3311"]
 [ext_resource type="Texture2D" uid="uid://b6vctk5unybnq" path="res://textures/billboard.png" id="13_uho00"]
 [ext_resource type="Texture2D" uid="uid://c6mlshegexbgc" path="res://textures/logo.png" id="15_eb251"]
 [ext_resource type="Texture2D" uid="uid://dx8olo8hu6hut" path="res://textures/circuit_top_large.png" id="17_1j778"]
 [ext_resource type="Script" uid="uid://d026yu1vw2k3x" path="res://ParallaxBoden.cs" id="18_318f5"]
-[ext_resource type="Texture2D" uid="uid://cx0rl7m4ph0ma" path="res://textures/circuit_top_rect.png" id="20_1j778"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_uho00"]
 font_size = 32
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aqd0d"]
-albedo_texture = ExtResource("10_167fd")
+albedo_color = Color(0.09411765, 0.23529412, 0.03529412, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eb251"]
 albedo_texture = ExtResource("13_uho00")
@@ -60,15 +57,6 @@ uv1_scale = Vector3(9, 9, 9)
 material = SubResource("StandardMaterial3D_167fd")
 size = Vector2(500, 500)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_acmr4"]
-cull_mode = 2
-albedo_texture = ExtResource("20_1j778")
-uv1_scale = Vector3(9, 9, 9)
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_s7npt"]
-material = SubResource("StandardMaterial3D_acmr4")
-size = Vector2(500, 500)
-
 [node name="Node3D" type="Node3D" unique_id=1314113066]
 
 [node name="CameraTransition" parent="." unique_id=572744377 instance=ExtResource("1_eb251")]
@@ -77,30 +65,40 @@ size = Vector2(500, 500)
 script = ExtResource("1_lwfei")
 Hex = ExtResource("2_8njnu")
 GridManager = NodePath("../GridManager")
-LevelEmptyTiles = 2
-LevelDisruptors = 3
+LevelEmptyTiles = 10
+LevelDisruptors = 20
 
-[node name="GridManager" type="Node" parent="." unique_id=1484143566 node_paths=PackedStringArray("DebugInfo", "DebugButton")]
+[node name="GridManager" type="Node" parent="." unique_id=1484143566]
 script = ExtResource("2_3ooda")
-DebugInfo = NodePath("../CanvasLayer/Debug/DebugLabel")
-DebugButton = NodePath("../CanvasLayer/Debug/DebugButton")
 
-[node name="RoundManager" type="Node" parent="." unique_id=1836318154 node_paths=PackedStringArray("CameraInteraction", "LevelGenerator", "GridManager", "RoundProgress")]
+[node name="RoundManager" type="Node" parent="." unique_id=1836318154 node_paths=PackedStringArray("CameraInteraction", "LevelGenerator", "GridManager", "RoundProgress", "IngameUI", "RetryButton", "ScoreLabel", "HighscoreLabel", "TransitionCamera", "ScoreCamera")]
 script = ExtResource("2_skmpo")
 CameraInteraction = NodePath("../Camera3D")
 LevelGenerator = NodePath("../DebugLevelGenerator")
 GridManager = NodePath("../GridManager")
 RoundProgress = NodePath("../CanvasLayer/IngameUI/ProgressBar")
-RoundDelay = 5
+IngameUI = NodePath("../CanvasLayer/IngameUI")
+RoundDelay = 1
+RetryButton = NodePath("../CanvasLayer/Retry")
+ScoreLabel = NodePath("../Billboard/Scoreboard/ScoreLabel")
+HighscoreLabel = NodePath("../Billboard/HighscoreInfo/HighscoreLabel")
+TransitionCamera = NodePath("../CameraTransition")
+ScoreCamera = NodePath("../ScoreView")
 
-[node name="GameState" type="Node" parent="." unique_id=80621873 node_paths=PackedStringArray("MainMenu", "IngameUI", "TransitionCamera", "MainMenuCamera", "IngameCamera", "RoundManager")]
+[node name="GameState" type="Node" parent="." unique_id=80621873 node_paths=PackedStringArray("MainMenu", "IngameUI", "TransitionCamera", "MainMenuCamera", "ScoreboardCamera", "IngameCamera", "RoundManager", "Scoreboard", "HighscoreBoard", "HowToPlayInfo", "CreditsInfo", "ButtonBack")]
 script = ExtResource("7_l44fa")
 MainMenu = NodePath("../CanvasLayer/MainMenu")
 IngameUI = NodePath("../CanvasLayer/IngameUI")
 TransitionCamera = NodePath("../CameraTransition")
-MainMenuCamera = NodePath("../BillboardCamera")
+MainMenuCamera = NodePath("../BillboardView")
+ScoreboardCamera = NodePath("../ScoreView")
 IngameCamera = NodePath("../Camera3D")
 RoundManager = NodePath("../RoundManager")
+Scoreboard = NodePath("../Billboard/Scoreboard")
+HighscoreBoard = NodePath("../Billboard/HighscoreInfo")
+HowToPlayInfo = NodePath("../Billboard/HowToPlayInfo")
+CreditsInfo = NodePath("../Billboard/CreditsInfo")
+ButtonBack = NodePath("../CanvasLayer/Retry")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=993000032]
 
@@ -111,6 +109,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="StartGame" type="Button" parent="CanvasLayer/MainMenu" unique_id=994266916]
 layout_mode = 1
@@ -134,7 +133,7 @@ text = "Start Game"
 label_settings = SubResource("LabelSettings_uho00")
 horizontal_alignment = 1
 
-[node name="Settings" type="Button" parent="CanvasLayer/MainMenu" unique_id=250035317]
+[node name="HowToPlay" type="Button" parent="CanvasLayer/MainMenu" unique_id=250035317]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -148,11 +147,11 @@ offset_bottom = 14.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="CanvasLayer/MainMenu/Settings" unique_id=1981694612]
+[node name="Label" type="Label" parent="CanvasLayer/MainMenu/HowToPlay" unique_id=1981694612]
 layout_mode = 0
 offset_right = 200.0
 offset_bottom = 45.0
-text = "Settings"
+text = "How to Play"
 label_settings = SubResource("LabelSettings_uho00")
 horizontal_alignment = 1
 
@@ -200,16 +199,37 @@ text = "Quit"
 label_settings = SubResource("LabelSettings_uho00")
 horizontal_alignment = 1
 
+[node name="Retry" type="Button" parent="CanvasLayer" unique_id=185363002]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -83.0
+offset_right = 100.0
+offset_bottom = -38.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="CanvasLayer/Retry" unique_id=212954436]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 45.0
+text = "Back"
+label_settings = SubResource("LabelSettings_uho00")
+horizontal_alignment = 1
+
 [node name="IngameUI" type="Control" parent="CanvasLayer" unique_id=507365836]
 visible = false
 layout_mode = 3
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.5
-grow_horizontal = 0
+anchor_bottom = 1.0
+grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/IngameUI" unique_id=354028720]
 layout_mode = 1
@@ -219,30 +239,14 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 offset_left = -54.0
-offset_top = 291.92303
+offset_top = 289.92303
 offset_right = 536.1333
-offset_bottom = 318.92303
+offset_bottom = 316.92303
 grow_horizontal = 0
 grow_vertical = 2
 rotation = -1.5707964
 max_value = 30.0
 show_percentage = false
-
-[node name="Debug" type="Node" parent="CanvasLayer" unique_id=499495524]
-
-[node name="DebugLabel" type="Label" parent="CanvasLayer/Debug" unique_id=795775713]
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 33.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="DebugButton" type="Button" parent="CanvasLayer/Debug" unique_id=1015350246]
-offset_right = 55.0
-offset_bottom = 31.0
-text = "Check"
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=99254595 node_paths=PackedStringArray("AudioStreamPlayer", "GridManagerNode")]
 transform = Transform3D(0.99999434, -0.003256822, 0.0008726642, 0.00087266415, 0.49999923, 0.86602545, -0.0032568222, -0.8660197, 0.49999925, 6, 4.5, 7.428664)
@@ -260,357 +264,352 @@ transform = Transform3D(1, -2.3283064e-10, -1.1641532e-10, 0, 1, -1.4901161e-07,
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Camera3D" unique_id=1955750935]
 
-[node name="Node" type="Node" parent="." unique_id=1953600473 node_paths=PackedStringArray("CloneTarget", "NodeToClone")]
-script = ExtResource("11_l44fa")
-CloneTarget = NodePath("../DemoTerrain")
-NodeToClone = NodePath("../DemoTerrain/Hex")
-GridX = 14
-GridY = 5
-Result = Vector3(12.04, 0, 3.75)
+[node name="ScoreView" type="Camera3D" parent="." unique_id=1382711533]
+transform = Transform3D(0.8819127, -0.12344626, 0.45496252, 0.0016858577, 0.9659243, 0.25881904, -0.47140965, -0.2274888, 0.85206914, 3.48, 2.74, 3.954)
 
-[node name="DemoTerrain" type="Node3D" parent="." unique_id=825208350]
+[node name="StartTerrain" type="Node3D" parent="." unique_id=825208350]
 
-[node name="Hex" type="MeshInstance3D" parent="DemoTerrain" unique_id=1141399512]
+[node name="Hex" type="MeshInstance3D" parent="StartTerrain" unique_id=1141399512]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.44, 0.33, 3.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex2" type="MeshInstance3D" parent="DemoTerrain" unique_id=1788126554]
+[node name="Hex2" type="MeshInstance3D" parent="StartTerrain" unique_id=1788126554]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.58, 0.37, 3.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex3" type="MeshInstance3D" parent="DemoTerrain" unique_id=643743341]
+[node name="Hex3" type="MeshInstance3D" parent="StartTerrain" unique_id=643743341]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.72, 0.33, 3.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex4" type="MeshInstance3D" parent="DemoTerrain" unique_id=154897520]
+[node name="Hex4" type="MeshInstance3D" parent="StartTerrain" unique_id=154897520]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.86, 0.37, 3.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex5" type="MeshInstance3D" parent="DemoTerrain" unique_id=1774690803]
+[node name="Hex5" type="MeshInstance3D" parent="StartTerrain" unique_id=1774690803]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33, 3.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex6" type="MeshInstance3D" parent="DemoTerrain" unique_id=335295367]
+[node name="Hex6" type="MeshInstance3D" parent="StartTerrain" unique_id=335295367]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43, 0.54347694, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex7" type="MeshInstance3D" parent="DemoTerrain" unique_id=240237934]
+[node name="Hex7" type="MeshInstance3D" parent="StartTerrain" unique_id=240237934]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 0.5934769, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex8" type="MeshInstance3D" parent="DemoTerrain" unique_id=309123766]
+[node name="Hex8" type="MeshInstance3D" parent="StartTerrain" unique_id=309123766]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.15, 0.54347694, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex9" type="MeshInstance3D" parent="DemoTerrain" unique_id=806672674]
+[node name="Hex9" type="MeshInstance3D" parent="StartTerrain" unique_id=806672674]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.01, 0.5934769, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex10" type="MeshInstance3D" parent="DemoTerrain" unique_id=526245116]
+[node name="Hex10" type="MeshInstance3D" parent="StartTerrain" unique_id=526245116]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8700001, 0.37, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex16" type="MeshInstance3D" parent="DemoTerrain" unique_id=2091620129]
+[node name="Hex16" type="MeshInstance3D" parent="StartTerrain" unique_id=2091620129]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.030001, 0.33, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex17" type="MeshInstance3D" parent="DemoTerrain" unique_id=1815031602]
+[node name="Hex17" type="MeshInstance3D" parent="StartTerrain" unique_id=1815031602]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.89, 0.37, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex18" type="MeshInstance3D" parent="DemoTerrain" unique_id=482387574]
+[node name="Hex18" type="MeshInstance3D" parent="StartTerrain" unique_id=482387574]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.75, 0.33, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex19" type="MeshInstance3D" parent="DemoTerrain" unique_id=1201998203]
+[node name="Hex19" type="MeshInstance3D" parent="StartTerrain" unique_id=1201998203]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.610001, 0.37, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex20" type="MeshInstance3D" parent="DemoTerrain" unique_id=1906480648]
+[node name="Hex20" type="MeshInstance3D" parent="StartTerrain" unique_id=1906480648]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.47, 0.33, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex11" type="MeshInstance3D" parent="DemoTerrain" unique_id=2066814484]
+[node name="Hex11" type="MeshInstance3D" parent="StartTerrain" unique_id=2066814484]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7823014, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex12" type="MeshInstance3D" parent="DemoTerrain" unique_id=1490243325]
+[node name="Hex12" type="MeshInstance3D" parent="StartTerrain" unique_id=1490243325]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.86, 0.7823014, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex13" type="MeshInstance3D" parent="DemoTerrain" unique_id=716128706]
+[node name="Hex13" type="MeshInstance3D" parent="StartTerrain" unique_id=716128706]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.72, 0.7823014, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex14" type="MeshInstance3D" parent="DemoTerrain" unique_id=1061615039]
+[node name="Hex14" type="MeshInstance3D" parent="StartTerrain" unique_id=1061615039]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.58, 0.7823014, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex15" type="MeshInstance3D" parent="DemoTerrain" unique_id=389145264]
+[node name="Hex15" type="MeshInstance3D" parent="StartTerrain" unique_id=389145264]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.44, 0.5934769, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex21" type="MeshInstance3D" parent="DemoTerrain" unique_id=1019590606]
+[node name="Hex21" type="MeshInstance3D" parent="StartTerrain" unique_id=1019590606]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.3, 0.33, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex22" type="MeshInstance3D" parent="DemoTerrain" unique_id=146586833]
+[node name="Hex22" type="MeshInstance3D" parent="StartTerrain" unique_id=146586833]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, 0.37, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex23" type="MeshInstance3D" parent="DemoTerrain" unique_id=1146502788]
+[node name="Hex23" type="MeshInstance3D" parent="StartTerrain" unique_id=1146502788]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.46, 0.5934769, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex24" type="MeshInstance3D" parent="DemoTerrain" unique_id=1737259647]
+[node name="Hex24" type="MeshInstance3D" parent="StartTerrain" unique_id=1737259647]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.32, 0.54347694, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex25" type="MeshInstance3D" parent="DemoTerrain" unique_id=1992663259]
+[node name="Hex25" type="MeshInstance3D" parent="StartTerrain" unique_id=1992663259]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.18, 0.5934769, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex26" type="MeshInstance3D" parent="DemoTerrain" unique_id=1500501029]
+[node name="Hex26" type="MeshInstance3D" parent="StartTerrain" unique_id=1500501029]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.04, 0.54347694, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex27" type="MeshInstance3D" parent="DemoTerrain" unique_id=209541059]
+[node name="Hex27" type="MeshInstance3D" parent="StartTerrain" unique_id=209541059]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.47, 0.8323014, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex28" type="MeshInstance3D" parent="DemoTerrain" unique_id=611958241]
+[node name="Hex28" type="MeshInstance3D" parent="StartTerrain" unique_id=611958241]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.610001, 0.8323014, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex29" type="MeshInstance3D" parent="DemoTerrain" unique_id=1477351329]
+[node name="Hex29" type="MeshInstance3D" parent="StartTerrain" unique_id=1477351329]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.75, 0.7823014, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex30" type="MeshInstance3D" parent="DemoTerrain" unique_id=1204911562]
+[node name="Hex30" type="MeshInstance3D" parent="StartTerrain" unique_id=1204911562]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.89, 0.8323014, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex31" type="MeshInstance3D" parent="DemoTerrain" unique_id=139624082]
+[node name="Hex31" type="MeshInstance3D" parent="StartTerrain" unique_id=139624082]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.030001, 0.54347694, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex32" type="MeshInstance3D" parent="DemoTerrain" unique_id=1021223052]
+[node name="Hex32" type="MeshInstance3D" parent="StartTerrain" unique_id=1021223052]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.17, 0.37, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex33" type="MeshInstance3D" parent="DemoTerrain" unique_id=1757507689]
+[node name="Hex33" type="MeshInstance3D" parent="StartTerrain" unique_id=1757507689]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.31, 0.33, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex34" type="MeshInstance3D" parent="DemoTerrain" unique_id=1146858799]
+[node name="Hex34" type="MeshInstance3D" parent="StartTerrain" unique_id=1146858799]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.45, 0.37, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex35" type="MeshInstance3D" parent="DemoTerrain" unique_id=2098493392]
+[node name="Hex35" type="MeshInstance3D" parent="StartTerrain" unique_id=2098493392]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5899997, 0.33, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex36" type="MeshInstance3D" parent="DemoTerrain" unique_id=1956146714]
+[node name="Hex36" type="MeshInstance3D" parent="StartTerrain" unique_id=1956146714]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.73, 0.37, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex37" type="MeshInstance3D" parent="DemoTerrain" unique_id=1620888611]
+[node name="Hex37" type="MeshInstance3D" parent="StartTerrain" unique_id=1620888611]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8700001, 0.54347694, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex38" type="MeshInstance3D" parent="DemoTerrain" unique_id=347335438]
+[node name="Hex38" type="MeshInstance3D" parent="StartTerrain" unique_id=347335438]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.01, 0.7823014, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex39" type="MeshInstance3D" parent="DemoTerrain" unique_id=49679944]
+[node name="Hex39" type="MeshInstance3D" parent="StartTerrain" unique_id=49679944]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.15, 0.9139011, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex40" type="MeshInstance3D" parent="DemoTerrain" unique_id=1043017123]
+[node name="Hex40" type="MeshInstance3D" parent="StartTerrain" unique_id=1043017123]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 0.86390114, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex41" type="MeshInstance3D" parent="DemoTerrain" unique_id=1504879497]
+[node name="Hex41" type="MeshInstance3D" parent="StartTerrain" unique_id=1504879497]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43, 0.9139011, 1.5)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex42" type="MeshInstance3D" parent="DemoTerrain" unique_id=2015620442]
+[node name="Hex42" type="MeshInstance3D" parent="StartTerrain" unique_id=2015620442]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0295706, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex43" type="MeshInstance3D" parent="DemoTerrain" unique_id=295309793]
+[node name="Hex43" type="MeshInstance3D" parent="StartTerrain" unique_id=295309793]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.86, 1.0795705, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex44" type="MeshInstance3D" parent="DemoTerrain" unique_id=291315684]
+[node name="Hex44" type="MeshInstance3D" parent="StartTerrain" unique_id=291315684]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.72, 1.0295706, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex45" type="MeshInstance3D" parent="DemoTerrain" unique_id=308059540]
+[node name="Hex45" type="MeshInstance3D" parent="StartTerrain" unique_id=308059540]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.58, 0.9139011, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex46" type="MeshInstance3D" parent="DemoTerrain" unique_id=1962588203]
+[node name="Hex46" type="MeshInstance3D" parent="StartTerrain" unique_id=1962588203]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.44, 0.7823014, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex47" type="MeshInstance3D" parent="DemoTerrain" unique_id=1679065413]
+[node name="Hex47" type="MeshInstance3D" parent="StartTerrain" unique_id=1679065413]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.3, 0.5934769, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex48" type="MeshInstance3D" parent="DemoTerrain" unique_id=1371539445]
+[node name="Hex48" type="MeshInstance3D" parent="StartTerrain" unique_id=1371539445]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.16, 0.5934769, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex49" type="MeshInstance3D" parent="DemoTerrain" unique_id=2147139231]
+[node name="Hex49" type="MeshInstance3D" parent="StartTerrain" unique_id=2147139231]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.02, 0.54347694, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex50" type="MeshInstance3D" parent="DemoTerrain" unique_id=657107600]
+[node name="Hex50" type="MeshInstance3D" parent="StartTerrain" unique_id=657107600]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.88, 0.5934769, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex51" type="MeshInstance3D" parent="DemoTerrain" unique_id=1170636343]
+[node name="Hex51" type="MeshInstance3D" parent="StartTerrain" unique_id=1170636343]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7400002, 0.54347694, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex52" type="MeshInstance3D" parent="DemoTerrain" unique_id=1099342173]
+[node name="Hex52" type="MeshInstance3D" parent="StartTerrain" unique_id=1099342173]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, 0.5934769, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex53" type="MeshInstance3D" parent="DemoTerrain" unique_id=2073278519]
+[node name="Hex53" type="MeshInstance3D" parent="StartTerrain" unique_id=2073278519]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.46, 0.7823014, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex54" type="MeshInstance3D" parent="DemoTerrain" unique_id=1664057873]
+[node name="Hex54" type="MeshInstance3D" parent="StartTerrain" unique_id=1664057873]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.32, 0.9980835, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex55" type="MeshInstance3D" parent="DemoTerrain" unique_id=1059429386]
+[node name="Hex55" type="MeshInstance3D" parent="StartTerrain" unique_id=1059429386]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.18, 0.9480835, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex56" type="MeshInstance3D" parent="DemoTerrain" unique_id=305360266]
+[node name="Hex56" type="MeshInstance3D" parent="StartTerrain" unique_id=305360266]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.04, 0.9980835, 0.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex57" type="MeshInstance3D" parent="DemoTerrain" unique_id=363275162]
+[node name="Hex57" type="MeshInstance3D" parent="StartTerrain" unique_id=363275162]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5899997, -0.11016977, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex58" type="MeshInstance3D" parent="DemoTerrain" unique_id=780949827]
+[node name="Hex58" type="MeshInstance3D" parent="StartTerrain" unique_id=780949827]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.73, -0.023257494, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex59" type="MeshInstance3D" parent="DemoTerrain" unique_id=2004117630]
+[node name="Hex59" type="MeshInstance3D" parent="StartTerrain" unique_id=2004117630]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.45, -0.085199594, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex60" type="MeshInstance3D" parent="DemoTerrain" unique_id=812870026]
+[node name="Hex60" type="MeshInstance3D" parent="StartTerrain" unique_id=812870026]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.31, -0.03545451, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex61" type="MeshInstance3D" parent="DemoTerrain" unique_id=149903266]
+[node name="Hex61" type="MeshInstance3D" parent="StartTerrain" unique_id=149903266]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.17, -0.01195246, 3)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex62" type="MeshInstance3D" parent="DemoTerrain" unique_id=1104836517]
+[node name="Hex62" type="MeshInstance3D" parent="StartTerrain" unique_id=1104836517]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.88, -0.020759821, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex63" type="MeshInstance3D" parent="DemoTerrain" unique_id=963908497]
+[node name="Hex63" type="MeshInstance3D" parent="StartTerrain" unique_id=963908497]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7400002, 0, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex64" type="MeshInstance3D" parent="DemoTerrain" unique_id=487195351]
+[node name="Hex64" type="MeshInstance3D" parent="StartTerrain" unique_id=487195351]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.02, 0, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex65" type="MeshInstance3D" parent="DemoTerrain" unique_id=1209110930]
+[node name="Hex65" type="MeshInstance3D" parent="StartTerrain" unique_id=1209110930]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.16, -0.037126362, 2.25)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex66" type="MeshInstance3D" parent="DemoTerrain" unique_id=1218739818]
+[node name="Hex66" type="MeshInstance3D" parent="StartTerrain" unique_id=1218739818]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.46, 0, 3.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex67" type="MeshInstance3D" parent="DemoTerrain" unique_id=683595763]
+[node name="Hex67" type="MeshInstance3D" parent="StartTerrain" unique_id=683595763]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.32, -0.035547137, 3.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex68" type="MeshInstance3D" parent="DemoTerrain" unique_id=181485063]
+[node name="Hex68" type="MeshInstance3D" parent="StartTerrain" unique_id=181485063]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.18, 0, 3.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
 
-[node name="Hex69" type="MeshInstance3D" parent="DemoTerrain" unique_id=1536334214]
+[node name="Hex69" type="MeshInstance3D" parent="StartTerrain" unique_id=1536334214]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.04, -0.010051429, 3.75)
 material_override = SubResource("StandardMaterial3D_aqd0d")
 mesh = ExtResource("11_pcvme")
@@ -625,20 +624,87 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.005501032, 2.9108546, 0.07
 material_override = SubResource("StandardMaterial3D_l44fa")
 mesh = SubResource("QuadMesh_u58v4")
 
-[node name="BillboardCamera" type="Camera3D" parent="." unique_id=1855856373]
+[node name="Scoreboard" type="Node3D" parent="Billboard" unique_id=1515819122]
+visible = false
+
+[node name="ScoreTitle" type="Label3D" parent="Billboard/Scoreboard" unique_id=1613310194]
+transform = Transform3D(1.7777784, 0, 2.9802322e-07, 0, 1.777778, 0, -2.9802322e-07, 0, 1.7777784, 0, 2.271, 0.16100001)
+modulate = Color(0.92156863, 0, 0, 1)
+outline_modulate = Color(1, 0, 0, 1)
+text = "Your Score:"
+font_size = 30
+outline_size = 2
+
+[node name="ScoreLabel" type="Label3D" parent="Billboard/Scoreboard" unique_id=1958645115]
+transform = Transform3D(1.3333335, 0, 1.1920929e-07, 0, 1.3333334, 0, -1.1920929e-07, 0, 1.3333335, -2.3841858e-07, 1.447, 0.069000006)
+modulate = Color(0.8745098, 0, 0, 1)
+outline_modulate = Color(1, 0, 0, 1)
+text = "10"
+font_size = 200
+
+[node name="HighscoreInfo" type="Node3D" parent="Billboard" unique_id=1187482966]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.165, 0, 0)
+
+[node name="ScoreTitle" type="Label3D" parent="Billboard/HighscoreInfo" unique_id=1574280465]
+transform = Transform3D(1.7777784, 0, 2.9802322e-07, 0, 1.777778, 0, -2.9802322e-07, 0, 1.7777784, -0.095, 1.377, 0.161)
+modulate = Color(0.92156863, 0, 0, 1)
+outline_modulate = Color(1, 0, 0, 1)
+text = "Highscore"
+font_size = 16
+outline_size = 2
+
+[node name="HighscoreLabel" type="Label3D" parent="Billboard/HighscoreInfo" unique_id=195200353]
+transform = Transform3D(1.3333335, 0, 1.1920929e-07, 0, 1.3333334, 0, -1.1920929e-07, 0, 1.3333335, -0.085, 0.947, 0.069)
+modulate = Color(0.8745098, 0, 0, 1)
+outline_modulate = Color(1, 0, 0, 1)
+text = "0"
+font_size = 70
+
+[node name="HowToPlayInfo" type="Node3D" parent="Billboard" unique_id=449207159]
+visible = false
+
+[node name="Text" type="Label3D" parent="Billboard/HowToPlayInfo" unique_id=330209625]
+transform = Transform3D(1.7777784, 0, 2.9802322e-07, 0, 1.777778, 0, -2.9802322e-07, 0, 1.7777784, -1.62, 2.516, 0.161)
+modulate = Color(0.92156863, 0, 0, 1)
+outline_modulate = Color(1, 0, 0, 1)
+text = "Left-Click a tile to mark it for
+ swapping. Click the next tile
+to swap places.
+Scroll while hovering a tile to
+rotate it."
+font_size = 26
+outline_size = 2
+horizontal_alignment = 0
+vertical_alignment = 0
+
+[node name="CreditsInfo" type="Node3D" parent="Billboard" unique_id=148842067]
+visible = false
+
+[node name="CreatedByTitle" type="Label3D" parent="Billboard/CreditsInfo" unique_id=177818671]
+transform = Transform3D(1.7777784, 0, 2.9802322e-07, 0, 1.777778, 0, -2.9802322e-07, 0, 1.7777784, 0, 2.131, 0.161)
+modulate = Color(0.92156863, 0, 0, 1)
+outline_modulate = Color(1, 0, 0, 1)
+text = "Created by:"
+font_size = 20
+outline_size = 2
+
+[node name="CreatedByText" type="Label3D" parent="Billboard/CreditsInfo" unique_id=683264604]
+transform = Transform3D(1.7777784, 0, 2.9802322e-07, 0, 1.777778, 0, -2.9802322e-07, 0, 1.7777784, 0, 1.391, 0.161)
+modulate = Color(0.92156863, 0, 0, 1)
+outline_modulate = Color(1, 0, 0, 1)
+text = "Jeremias
+Lorenz"
+outline_size = 2
+
+[node name="BillboardView" type="Camera3D" parent="." unique_id=1855856373]
 transform = Transform3D(0.92554086, -0.0013508498, 0.3786454, 0, 0.9999936, 0.003567563, -0.3786478, -0.003301925, 0.92553496, 2.308957, 2.242901, 3.1974277)
 current = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1132959471]
 environment = SubResource("Environment_318f5")
 
-[node name="Background_lower" type="MeshInstance3D" parent="." unique_id=1326234328]
+[node name="Background_lower" type="MeshInstance3D" parent="." unique_id=1326234328 node_paths=PackedStringArray("Camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -20, 0)
 mesh = SubResource("PlaneMesh_f66im")
 script = ExtResource("18_318f5")
-
-[node name="Background_higher" type="MeshInstance3D" parent="." unique_id=2144382270]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
-visible = false
-mesh = SubResource("PlaneMesh_s7npt")
-script = ExtResource("18_318f5")
+Camera = NodePath("../Camera3D")

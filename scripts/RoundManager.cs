@@ -6,14 +6,15 @@ using System.Linq;
 public partial class RoundManager : Node
 {
     [Export] public CameraInteraction CameraInteraction { get; set; }
-
     [Export] public DebugLevelGenerator LevelGenerator { get; set; }
-
     [Export] public GridManager GridManager { get; set; }
-
     [Export] public ProgressBar RoundProgress { get; set; }
-
     [Export] public int RoundDelay { get; set; }
+    [Export] public Button RetryButton { get; set; }
+    [Export] public Label3D ScoreLabel { get; set; }
+    [Export] public Label3D HighscoreLabel { get; set; }
+    [Export] public TransitionCamera TransitionCamera { get; set; }
+    [Export] public Camera3D ScoreCamera { get; set; }
 
     private float currentDelay = 2;
 
@@ -25,8 +26,20 @@ public partial class RoundManager : Node
 
     public event Action PlayerLost;
 
+    public void ResetLevel()
+    {
+        CurrentRound = 0;
+        startHexes.Clear();
+        endHex = null;
+        IsRunning = false;
+        RoundProgress.Value = 0;
+        LevelGenerator.ResetLevel();
+    }
+
     public void StartGame()
     {
+        CameraInteraction.IsInputLocked = false;
+        GridManager.ResetLevel();
         endHex = LevelGenerator.GenerateLevel();
         startHexes.Push(LevelGenerator.StartHex);
         CameraInteraction.MoveToFocusHexRow(endHex.Coordinates.Y, true);
@@ -69,6 +82,7 @@ public partial class RoundManager : Node
             }
             else
             {
+                IsRunning = false;
                 RoundProgress.Visible = false;
                 PlayerLost?.Invoke();
             }
@@ -104,7 +118,7 @@ public partial class RoundManager : Node
     public void StartNextLevel()
     {
         CurrentRound++;
-        GD.Print($"Starting new round {CurrentRound}");
+        GD.Print($"Starting round {CurrentRound}");
 
         var targetRow = endHex.Coordinates.Y;
         startHexes.Push(endHex);
@@ -115,4 +129,47 @@ public partial class RoundManager : Node
         CameraInteraction.MoveToFocusHexRow(targetRow);
     }
 
+    private uint highScore;
+    private const string HighscoreFile = "user://highscore.dat";
+
+    public override void _Ready()
+    {
+        if (FileAccess.FileExists(HighscoreFile))
+        {
+            using var access = FileAccess.Open(HighscoreFile, FileAccess.ModeFlags.Read);
+            highScore = access.Get32();
+            HighscoreLabel.Text = highScore.ToString();
+        }
+    }
+
+
+    public void StartRecap()
+    {
+        CameraInteraction.IsInputLocked = true;
+
+        var score = startHexes.Count - 1;
+        ScoreLabel.Text = score.ToString();
+        
+        if (highScore < score)
+        {
+            highScore = (uint)score;
+            using var access = FileAccess.Open(HighscoreFile, FileAccess.ModeFlags.Write);
+            access.Store32(highScore);
+            
+        }
+        HighscoreLabel.Text = highScore.ToString();
+
+        float duration = endHex.Coordinates.Y * 0.1f;
+        CameraInteraction.MoveToFocusHexRow(5, duration: duration);
+        var timer = GetTree().CreateTimer(duration);
+        timer.Timeout += () =>
+        {
+            TransitionCamera.Transition(CameraInteraction, ScoreCamera, 1);
+            TransitionCamera.TransitionFinished += () =>
+            {
+                        RetryButton.Visible = true;
+            };
+            timer.Dispose();
+        };
+    }
 }
